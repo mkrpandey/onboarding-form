@@ -1,0 +1,722 @@
+<!Doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Employee Onboarding — 7-step</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{background:#f4f6fb;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,Helvetica,sans-serif}
+    .container{max-width:920px;margin:28px auto}
+    .card{padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,30,60,0.06);background:#fff}
+    .steps{display:flex;gap:8px;margin-bottom:12px}
+    .step{flex:1;padding:8px;border-radius:8px;text-align:center;background:#eef3fb;color:#666}
+    .step.active{background:#0b74de;color:#fff}
+    label{font-weight:600;margin-top:8px}
+    input,textarea,select{width:100%;padding:9px;border-radius:8px;border:1px solid #d7dee9}
+    .row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .actions{display:flex;justify-content:space-between;gap:12px;margin-top:14px}
+    .btn-primary{background:#0b74de;border:0}
+    .small-note{font-size:13px;color:#666}
+    .preview-box{background:#fbfdff;border:1px solid #e3e8f0;border-radius:8px;padding:12px}
+    .file-thumb{max-width:140px;max-height:120px;border-radius:6px;object-fit:cover;margin-right:8px}
+    .muted{color:#6b7280}
+    .danger{color:#b91c1c}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h4>Employee Onboarding — 7-step (Demo)</h4>
+    <div class="steps" id="stepsRow">
+      <div class="step active" id="st0">1 Login</div>
+      <div class="step" id="st1">2 Aadhaar</div>
+      <div class="step" id="st2">3 Candidate</div>
+      <div class="step" id="st3">4 Background</div>
+      <div class="step" id="st4">5 Declaration</div>
+      <div class="step" id="st5">6 Uploads</div>
+      <div class="step" id="st6">7 Preview</div>
+    </div>
+
+    <!-- CONFIGURATION: set these values if you have endpoints or EmailJS -->
+    <!-- If you have your backend server to handle real Aadhaar OTP & final emailing, set BACKEND_AADHAAR_VERIFY_URL and BACKEND_FINAL_SUBMIT_URL -->
+    <script>
+      // ====== CONFIGURE ======
+      // If you have a backend endpoint that will:
+      //  - /api/send-email-otp  (POST {email}) -> sends OTP to email and returns {ok:true}
+      //  - /api/verify-email-otp (POST {email,otp}) -> returns {ok:true}
+      // set BACKEND_EMAIL_OTP_ENABLED = true and BACKEND_BASE_URL to your server.
+      const BACKEND_BASE_URL = "https://script.google.com/macros/s/AKfycbwxyz123abcXYZ/exec"; // e.g. "https://yourdomain.com" or "http://localhost:5000"
+      const BACKEND_EMAIL_OTP_ENABLED = true; // set true if you have /send-otp & /verify-otp endpoints
+      // UIDAI / Aadhaar: production requires server-side integration with UIDAI. If you have backend to call UIDAI set this:
+      const BACKEND_AADHAAR_VERIFY_URL = ""; // POST { aadhaar } -> server should call UIDAI OTP API and return { ok:true, txnId: "..."} or similar
+      // Final submit endpoint on your backend which will accept multipart/form-data: formData('pdf','payload','photo','signature','docs[]')
+      const BACKEND_FINAL_SUBMIT_URL = ""; // e.g. "https://yourdomain.com/api/submit"
+      // EmailJS optional (client-side) - if you want to use EmailJS, fill these (EmailJS docs required)
+      const EMAILJS_SERVICE_ID = "";
+      const EMAILJS_TEMPLATE_ID = "";
+      const EMAILJS_PUBLIC_KEY = ""; // user/public key from EmailJS
+      // =======================
+    </script>
+
+    <!-- PAGE 0: LOGIN -->
+    <div id="page-0">
+      <label>Full name</label>
+      <input id="login_name" placeholder="Ravi Kumar">
+      <div class="row-2 mt-2">
+        <div>
+          <label>Mobile number</label>
+          <input id="login_mobile" placeholder="10-digit mobile">
+        </div>
+        <div>
+          <label>Email</label>
+          <input id="login_email" placeholder="email@example.com">
+        </div>
+      </div>
+
+      <div class="row-2 mt-2">
+        <div>
+          <label>Send Email OTP</label>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" id="btnSendEmailOtp">Send OTP</button>
+            <div id="sendOtpMsg" class="small-note"></div>
+          </div>
+        </div>
+        <div>
+          <label>Enter OTP</label>
+          <div style="display:flex;gap:8px">
+            <input id="login_email_otp" placeholder="6-digit OTP">
+            <button class="btn btn-primary" id="btnVerifyEmailOtp">Verify</button>
+          </div>
+          <div id="verifyEmailMsg" class="small-note"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="muted">Email must be verified to proceed ➜</div>
+        <div><button class="btn btn-primary" id="toAadhaar" disabled>Next: Aadhaar</button></div>
+      </div>
+      <hr>
+      <div class="small-note">
+        Note: For real email OTP, set BACKEND_EMAIL_OTP_ENABLED=true and BACKEND_BASE_URL. Otherwise a demo OTP is used and shown in console.
+      </div>
+    </div>
+
+    <!-- PAGE 1: AADHAAR -->
+    <div id="page-1" style="display:none">
+      <label>Aadhaar Number</label>
+      <input id="aadhaar_number" placeholder="123412341234" maxlength="12" inputmode="numeric">
+      <div class="mt-2 row-2">
+        <div>
+          <label>Aadhaar Verify Mode</label>
+          <select id="aadhaar_mode">
+            <option value="demo">Demo (local OTP)</option>
+            <option value="backend">Use Backend (UIDAI integration)</option>
+          </select>
+        </div>
+        <div>
+          <label>Send OTP</label>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" id="btnSendAadhaarOtp">Send Aadhaar OTP</button>
+            <div id="aadhaarMsg" class="small-note"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="aadhaarOtpRow" style="display:none;margin-top:10px">
+        <label>Enter Aadhaar OTP</label>
+        <div style="display:flex;gap:8px">
+          <input id="aadhaar_otp" placeholder="6-digit OTP">
+          <button class="btn btn-primary" id="btnVerifyAadhaarOtp">Verify Aadhaar OTP</button>
+        </div>
+        <div id="aadhaarVerifyMsg" class="small-note"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-outline-secondary" id="backToLogin">Back</button>
+        <div><button class="btn btn-primary" id="toCandidate" disabled>Next: Candidate</button></div>
+      </div>
+
+      <hr>
+      <div class="small-note">
+        <strong>Important:</strong> Real UIDAI integration requires backend server credentials from UIDAI. If you choose "backend" mode, set BACKEND_AADHAAR_VERIFY_URL on top and implement server flow to call UIDAI APIs.
+      </div>
+    </div>
+
+    <!-- PAGE 2: CANDIDATE FORM (match your sample layout) -->
+    <div id="page-2" style="display:none">
+      <h5>Candidate Details</h5>
+      <div class="row-2">
+        <div>
+          <label>Full name</label>
+          <input id="cand_name" placeholder="Full name">
+        </div>
+        <div>
+          <label>Father / Spouse Name</label>
+          <input id="cand_guardian" placeholder="Father/Spouse">
+        </div>
+      </div>
+
+      <div class="row-2 mt-2">
+        <div>
+          <label>Gender</label>
+          <select id="cand_gender"><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+        <div>
+          <label>Date of Birth</label>
+          <input id="cand_dob" type="date">
+        </div>
+      </div>
+
+      <div class="mt-2">
+        <label>Address</label>
+        <textarea id="cand_address" rows="3"></textarea>
+      </div>
+
+      <div class="row-2 mt-2">
+        <div><label>Email</label><input id="cand_email" type="email"></div>
+        <div><label>Phone</label><input id="cand_phone"></div>
+      </div>
+
+      <div class="mt-2 row-2">
+        <div><label>Position applied</label><input id="cand_position"></div>
+        <div><label>Department</label><input id="cand_dept"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-outline-secondary" id="backToAadhaar">Back</button>
+        <div><button class="btn btn-primary" id="toBackground">Next: Background</button></div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: BACKGROUND VERIFICATION -->
+    <div id="page-3" style="display:none">
+      <h5>Background Verification</h5>
+
+      <div class="row-2">
+        <div>
+          <label>Previous Employer</label>
+          <input id="bg_prevEmployer">
+        </div>
+        <div>
+          <label>Designation</label>
+          <input id="bg_designation">
+        </div>
+      </div>
+
+      <div class="row-2 mt-2">
+        <div><label>Start Date</label><input id="bg_start" type="date"></div>
+        <div><label>End Date</label><input id="bg_end" type="date"></div>
+      </div>
+
+      <div class="mt-2">
+        <label>Reason for leaving</label>
+        <input id="bg_reason">
+      </div>
+
+      <div class="mt-2">
+        <label>Reference Contact (Name & Phone)</label>
+        <input id="bg_reference" placeholder="Name - Phone">
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-outline-secondary" id="backToCandidate">Back</button>
+        <div><button class="btn btn-primary" id="toDeclaration2">Next: Declaration</button></div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: DECLARATION -->
+    <div id="page-4" style="display:none">
+      <h5>Declaration</h5>
+      <textarea id="decl_text" rows="6">I hereby declare that the information provided above is true and correct to the best of my knowledge.</textarea>
+      <div class="mt-2">
+        <label>Place</label>
+        <input id="decl_place">
+      </div>
+      <div class="mt-2">
+        <label>Date</label>
+        <input id="decl_date" type="date">
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-outline-secondary" id="backToBackground">Back</button>
+        <div><button class="btn btn-primary" id="toUploads">Next: Uploads</button></div>
+      </div>
+    </div>
+
+    <!-- PAGE 5: UPLOADS & FINAL SUBMIT (user asked final submit on page 6) -->
+    <div id="page-5" style="display:none">
+      <h5>Upload Photo, Signature & Documents</h5>
+
+      <div class="row-2">
+        <div>
+          <label>Upload Photo (passport size)</label>
+          <input id="file_photo" type="file" accept="image/*">
+        </div>
+        <div>
+          <label>Upload Signature</label>
+          <input id="file_sign" type="file" accept="image/*">
+        </div>
+      </div>
+
+      <div class="mt-2">
+        <label>Other Documents (ID, Certificates) — you can upload multiple</label>
+        <input id="file_docs" type="file" multiple>
+      </div>
+
+      <div class="mt-3 preview-box">
+        <div><strong>Uploaded preview:</strong></div>
+        <div style="display:flex;align-items:center;margin-top:8px">
+          <img id="preview_photo" class="file-thumb" src="" style="display:none">
+          <img id="preview_sign" class="file-thumb" src="" style="display:none">
+          <div id="docs_list" class="muted"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-outline-secondary" id="backToDeclaration">Back</button>
+        <div>
+          <button class="btn btn-outline-primary" id="toPreview">Preview</button>
+          <button class="btn btn-success" id="finalSubmitBtn">Final Submit (Send PDF)</button>
+        </div>
+      </div>
+
+      <div id="finalSubmitMsg" class="mt-2 small-note"></div>
+      <div class="small-note mt-2 danger"><strong>Important:</strong> Final submit will generate PDF and attempt to send to Admin + Candidate email if BACKEND_FINAL_SUBMIT_URL or EmailJS configured.</div>
+    </div>
+
+    <!-- PAGE 6: PREVIEW -->
+    <div id="page-6" style="display:none">
+      <h5>Preview (What will go into PDF)</h5>
+      <div id="preview_block" class="preview-box"></div>
+
+      <div class="actions">
+        <button class="btn btn-outline-secondary" id="backToUploads2">Back</button>
+        <div>
+          <button class="btn btn-primary" id="downloadPdfBtn">Download PDF</button>
+          <button class="btn btn-success" id="confirmSubmitBtn">Confirm & Submit</button>
+        </div>
+      </div>
+
+      <div id="submitResult" class="mt-2"></div>
+    </div>
+
+    <!-- small footer -->
+    <div class="mt-3 muted small-note">Demo UI. For production Aadhaar verification, you must use UIDAI-approved backend integration.</div>
+  </div>
+</div>
+
+<!-- libs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
+
+<script>
+/* ===========================
+   Single-file 7-step form logic
+   - Demo / Backend hooks included
+   =========================== */
+
+(function(){
+  // Helpers
+  const el = id => document.getElementById(id);
+  const showStep = i => {
+    // pages: 0..6 correspond to page-0 .. page-6
+    for(let p=0;p<=6;p++){
+      const node = el('page-'+p);
+      if(node) node.style.display = (p===i)?'block':'none';
+      const stepNode = el('st'+p);
+      if(stepNode) stepNode.classList.toggle('active', p===i);
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  // initial
+  showStep(0);
+
+  // state
+  const state = {
+    login: { name:'', mobile:'', email:'', emailVerified:false },
+    aadhaar: { number:'', verified:false, txnId:null },
+    candidate: {},
+    background: {},
+    declaration: {},
+    uploads: { photoFile:null, signFile:null, docs:[] },
+  };
+
+  // ====== LOGIN EMAIL OTP ======
+  // demo OTP store
+  let demoEmailOtp = null;
+  el('btnSendEmailOtp').addEventListener('click', async ()=>{
+    const email = el('login_email').value.trim();
+    const name = el('login_name').value.trim();
+    const mobile = el('login_mobile').value.trim();
+    if(!email){ el('sendOtpMsg').textContent='Please enter email'; return; }
+    state.login = { name,mobile,email,emailVerified:false };
+    // If backend OTP enabled, call it
+    if(BACKEND_EMAIL_OTP_ENABLED && BACKEND_BASE_URL){
+      try{
+        el('sendOtpMsg').textContent='Sending OTP via backend...';
+        const resp = await fetch(BACKEND_BASE_URL + '/send-otp', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+        const j = await resp.json();
+        el('sendOtpMsg').textContent = j.message || 'OTP sent (backend)';
+      }catch(err){
+        console.error(err); el('sendOtpMsg').textContent='Backend OTP failed, using demo';
+        makeDemoEmailOtp(email);
+      }
+    } else {
+      // demo flow: generate OTP and show in console (or optionally EmailJS)
+      makeDemoEmailOtp(email);
+    }
+  });
+
+  function makeDemoEmailOtp(email){
+    demoEmailOtp = String(Math.floor(100000 + Math.random()*900000));
+    console.log('Demo Email OTP for',email,':', demoEmailOtp);
+    el('sendOtpMsg').textContent='Demo OTP generated — check browser console. (Use for testing)';
+  }
+
+  el('btnVerifyEmailOtp').addEventListener('click', async ()=>{
+    const otp = el('login_email_otp').value.trim();
+    const email = el('login_email').value.trim();
+    if(BACKEND_EMAIL_OTP_ENABLED && BACKEND_BASE_URL){
+      // verify via backend
+      try{
+        el('verifyEmailMsg').textContent='Verifying...';
+        const resp = await fetch(BACKEND_BASE_URL + '/verify-otp', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,otp})});
+        const j = await resp.json();
+        if(j.success){ el('verifyEmailMsg').textContent='Verified'; state.login.emailVerified=true; el('toAadhaar').disabled=false; }
+        else el('verifyEmailMsg').textContent='Invalid OTP';
+      }catch(err){
+        console.error(err); el('verifyEmailMsg').textContent='Backend verify failed';
+      }
+    } else {
+      // demo verify
+      if(otp && demoEmailOtp && otp===demoEmailOtp){
+        el('verifyEmailMsg').textContent='Verified (demo)';
+        state.login.emailVerified=true; el('toAadhaar').disabled=false;
+      } else el('verifyEmailMsg').textContent='Incorrect OTP (demo)';
+    }
+  });
+
+  el('toAadhaar').addEventListener('click', ()=> showStep(1));
+  el('backToLogin').addEventListener('click', ()=> showStep(0));
+
+  // ====== AADHAAR PAGE ======
+  let demoAadhaarOtp = null;
+  el('btnSendAadhaarOtp').addEventListener('click', async ()=>{
+    const aad = el('aadhaar_number').value.trim();
+    if(!/^\d{12}$/.test(aad)){ el('aadhaarMsg').textContent='Enter valid 12-digit Aadhaar'; return; }
+    state.aadhaar.number = aad;
+    const mode = el('aadhaar_mode').value;
+    if(mode === 'backend'){
+      // call your backend which should call UIDAI OTP API and respond with { ok:true, txnId }
+      if(!BACKEND_AADHAAR_VERIFY_URL){
+        el('aadhaarMsg').textContent = 'Set BACKEND_AADHAAR_VERIFY_URL to use backend mode';
+        return;
+      }
+      el('aadhaarMsg').textContent = 'Requesting Aadhaar OTP via backend...';
+      try{
+        const resp = await fetch(BACKEND_AADHAAR_VERIFY_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({aadhaar:aad})});
+        const j = await resp.json();
+        if(j.ok){ state.aadhaar.txnId = j.txnId || null; el('aadhaarMsg').textContent = 'OTP sent by UIDAI (backend)'; el('aadhaarOtpRow').style.display='block'; }
+        else el('aadhaarMsg').textContent = 'Backend Aadhaar request failed: ' + (j.message||'');
+      }catch(err){ console.error(err); el('aadhaarMsg').textContent = 'Backend error'; }
+    } else {
+      // Demo: generate OTP locally (or you can use SMS API from your backend)
+      demoAadhaarOtp = String(Math.floor(100000 + Math.random()*900000));
+      console.log('Demo Aadhaar OTP:', demoAadhaarOtp);
+      el('aadhaarMsg').textContent = 'Demo OTP generated — check console';
+      el('aadhaarOtpRow').style.display = 'block';
+    }
+  });
+
+  el('btnVerifyAadhaarOtp').addEventListener('click', async ()=>{
+    const otp = el('aadhaar_otp').value.trim();
+    const mode = el('aadhaar_mode').value;
+    if(mode === 'backend'){
+      if(!BACKEND_AADHAAR_VERIFY_URL){ el('aadhaarVerifyMsg').textContent='Backend URL not set'; return; }
+      el('aadhaarVerifyMsg').textContent='Verifying via backend...';
+      try{
+        const resp = await fetch(BACKEND_AADHAAR_VERIFY_URL + '/verify', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({aadhaar:state.aadhaar.number, otp, txnId: state.aadhaar.txnId})});
+        const j = await resp.json();
+        if(j.ok){ state.aadhaar.verified = true; el('aadhaarVerifyMsg').textContent='Aadhaar verified (UIDAI)'; el('toCandidate').disabled=false; }
+        else el('aadhaarVerifyMsg').textContent = 'Invalid/failed verification';
+      }catch(err){ console.error(err); el('aadhaarVerifyMsg').textContent='Backend verify error'; }
+    } else {
+      if(otp && demoAadhaarOtp && otp===demoAadhaarOtp){ state.aadhaar.verified=true; el('aadhaarVerifyMsg').textContent='Aadhaar verified (demo)'; el('toCandidate').disabled=false; }
+      else el('aadhaarVerifyMsg').textContent='Wrong OTP (demo)';
+    }
+  });
+
+  el('toCandidate').addEventListener('click', ()=> showStep(2));
+  el('backToAadhaar').addEventListener('click', ()=> showStep(1));
+
+  // ====== CANDIDATE PAGE ======
+  el('toBackground').addEventListener('click', ()=>{
+    // save candidate data
+    state.candidate = {
+      name: el('cand_name').value.trim(),
+      guardian: el('cand_guardian').value.trim(),
+      gender: el('cand_gender').value,
+      dob: el('cand_dob').value,
+      address: el('cand_address').value.trim(),
+      email: el('cand_email').value.trim(),
+      phone: el('cand_phone').value.trim(),
+      position: el('cand_position').value.trim(),
+      dept: el('cand_dept').value.trim(),
+    };
+    // basic validation
+    if(!state.candidate.name){ alert('Please enter candidate name'); return; }
+    showStep(3);
+  });
+  el('backToCandidate').addEventListener('click', ()=> showStep(2));
+
+  // ====== BACKGROUND PAGE ======
+  el('toDeclaration2').addEventListener('click', ()=>{
+    state.background = {
+      prevEmployer: el('bg_prevEmployer').value.trim(),
+      designation: el('bg_designation').value.trim(),
+      start: el('bg_start').value,
+      end: el('bg_end').value,
+      reason: el('bg_reason').value.trim(),
+      reference: el('bg_reference').value.trim(),
+    };
+    showStep(4);
+  });
+  el('backToBackground').addEventListener('click', ()=> showStep(3));
+
+  // ====== DECLARATION PAGE ======
+  el('toUploads').addEventListener('click', ()=>{
+    state.declaration = {
+      text: el('decl_text').value.trim(),
+      place: el('decl_place').value.trim(),
+      date: el('decl_date').value
+    };
+    showStep(5);
+  });
+  el('backToDeclaration').addEventListener('click', ()=> showStep(4));
+
+  // ====== UPLOADS PAGE ======
+  const toBase64 = file => new Promise((res,rej)=>{
+    if(!file) return res(null);
+    const r = new FileReader();
+    r.onload = ()=> res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+
+  el('file_photo').addEventListener('change', async (e)=>{
+    const f = e.target.files[0];
+    state.uploads.photoFile = f || null;
+    if(f){ el('preview_photo').src = await toBase64(f); el('preview_photo').style.display='inline-block'; }
+  });
+  el('file_sign').addEventListener('change', async (e)=>{
+    const f = e.target.files[0];
+    state.uploads.signFile = f || null;
+    if(f){ el('preview_sign').src = await toBase64(f); el('preview_sign').style.display='inline-block'; }
+  });
+  el('file_docs').addEventListener('change', (e)=>{
+    const files = Array.from(e.target.files || []);
+    state.uploads.docs = files;
+    el('docs_list').innerHTML = files.length ? files.map(f=>`<div>${f.name}</div>`).join('') : 'No docs';
+  });
+
+  el('toPreview').addEventListener('click', ()=> {
+    // show preview block (page-6)
+    buildPreviewBlock();
+    showStep(6);
+  });
+
+  // 'Final Submit' button on uploads page (user asked final on page 6, but we include here too)
+  el('finalSubmitBtn').addEventListener('click', ()=> {
+    // prompt user: go to preview & confirm
+    if(confirm('Aap final submit karna chahte hain? (PDF generate aur email bheja jayega)')) {
+      buildPreviewBlock();
+      showStep(6);
+      // Optionally auto-click confirm submit
+      // el('confirmSubmitBtn').click();
+    }
+  });
+
+  el('backToUploads2').addEventListener('click', ()=> showStep(5));
+
+  // ====== PREVIEW PAGE ======
+  function buildPreviewBlock(){
+    const p = {
+      login: state.login,
+      aadhaar: state.aadhaar,
+      candidate: state.candidate,
+      background: state.background,
+      declaration: state.declaration,
+      uploads: state.uploads
+    };
+    const html = `
+      <div><strong>Login:</strong> ${p.login.name} / ${p.login.mobile} / ${p.login.email}</div>
+      <div><strong>Aadhaar:</strong> ${p.aadhaar.number} (${p.aadhaar.verified ? 'Verified' : 'Not verified'})</div>
+      <hr>
+      <div><strong>Candidate:</strong></div>
+      <div>Name: ${p.candidate.name||'-'}</div>
+      <div>DOB: ${p.candidate.dob||'-'} | Gender: ${p.candidate.gender||'-'}</div>
+      <div>Position: ${p.candidate.position||'-'} | Dept: ${p.candidate.dept||'-'}</div>
+      <div>Address: <div class="muted">${p.candidate.address||'-'}</div></div>
+      <hr>
+      <div><strong>Background:</strong></div>
+      <div>Employer: ${p.background.prevEmployer||'-'} | Designation: ${p.background.designation||'-'}</div>
+      <div>Period: ${p.background.start||'-'} to ${p.background.end||'-'}</div>
+      <div>Reference: ${p.background.reference||'-'}</div>
+      <hr>
+      <div><strong>Declaration:</strong></div>
+      <div>${p.declaration.text||'-'}</div>
+      <div>Place: ${p.declaration.place||'-'} | Date: ${p.declaration.date||'-'}</div>
+      <hr>
+      <div><strong>Uploads:</strong></div>
+      <div>Photo: ${state.uploads.photoFile ? state.uploads.photoFile.name : '-'}</div>
+      <div>Signature: ${state.uploads.signFile ? state.uploads.signFile.name : '-'}</div>
+      <div>Docs: ${state.uploads.docs.length ? state.uploads.docs.map(d=>d.name).join(', ') : '-'}</div>
+    `;
+    el('preview_block').innerHTML = html;
+  }
+
+  // PDF generation & submit
+  async function generatePdfBlob(){
+    // use jsPDF, include images if uploaded
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit:'pt', format:'a4' });
+    let y = 40, left = 40;
+    doc.setFontSize(16); doc.text('Employee Onboarding - Form', left, y); y += 22;
+    doc.setFontSize(11);
+    // helper to write wrapped text
+    const write = (label, text) => {
+      doc.setFont(undefined, 'bold'); doc.text(label + ':', left, y);
+      doc.setFont(undefined, 'normal');
+      doc.text(String(text || '-'), left + 120, y);
+      y += 16;
+      if(y > 740){ doc.addPage(); y = 40; }
+    };
+
+    write('Name', state.login.name);
+    write('Mobile', state.login.mobile);
+    write('Email', state.login.email);
+    write('Aadhaar', state.aadhaar.number + (state.aadhaar.verified ? ' (verified)' : ''));
+    y += 6;
+    write('Candidate Name', state.candidate.name);
+    write('DOB', state.candidate.dob);
+    write('Gender', state.candidate.gender);
+    write('Position', state.candidate.position);
+    write('Department', state.candidate.dept);
+    write('Address', state.candidate.address);
+    y += 6;
+    write('Previous Employer', state.background.prevEmployer);
+    write('Designation', state.background.designation);
+    write('Employment Period', `${state.background.start || '-'} to ${state.background.end || '-'}`);
+    write('Reference', state.background.reference);
+    y += 6;
+    // Declaration (split)
+    doc.setFont(undefined,'bold'); doc.text('Declaration:', left, y); doc.setFont(undefined,'normal'); y+=14;
+    const declLines = doc.splitTextToSize(state.declaration.text || '-', 420);
+    doc.text(declLines, left, y); y += declLines.length*12 + 8;
+    write('Place', state.declaration.place);
+    write('Date', state.declaration.date);
+    y += 8;
+    // Images: photo and signature
+    if(state.uploads.photoFile){
+      const b64 = await toBase64(state.uploads.photoFile);
+      try{ doc.addImage(b64, 'JPEG', left, y, 100, 120); }catch(e){ try{ doc.addImage(b64, 'PNG', left, y, 100, 120); }catch(e2){ console.warn('image add fail',e2); } }
+      doc.text('Photo', left+110, y+12); 
+    }
+    if(state.uploads.signFile){
+      const b64s = await toBase64(state.uploads.signFile);
+      try{ doc.addImage(b64s, 'JPEG', left+220, y, 140, 60); }catch(e){ try{ doc.addImage(b64s, 'PNG', left+220, y, 140, 60); }catch(e2){console.warn(e2)} }
+      doc.text('Signature', left+220, y-10);
+    }
+    // final
+    return doc.output('blob');
+  }
+
+  // Download PDF
+  el('downloadPdfBtn').addEventListener('click', async ()=>{
+    el('submitResult').textContent = 'Generating PDF...';
+    const blob = await generatePdfBlob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `employee_${(state.login.name||'employee').replace(/\s+/g,'_')}.pdf`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    el('submitResult').innerHTML = '<div class="text-success">PDF downloaded locally.</div>';
+  });
+
+  // Confirm & Submit (this will either POST to backend or use EmailJS or fallback)
+  el('confirmSubmitBtn').addEventListener('click', async ()=>{
+    if(!confirm('Aap final submit karna chahte hain? Ye action PDF generate karega aur email bhejne ki koshish karega.')) return;
+    el('submitResult').textContent = 'Generating PDF & preparing to send...';
+    const blob = await generatePdfBlob();
+
+    // Prepare payload data
+    const payload = {
+      login: state.login,
+      aadhaar: state.aadhaar,
+      candidate: state.candidate,
+      background: state.background,
+      declaration: state.declaration,
+      uploads: { photo: state.uploads.photoFile ? state.uploads.photoFile.name : null, sign: state.uploads.signFile ? state.uploads.signFile.name : null, docs: state.uploads.docs.map(d=>d.name) }
+    };
+
+    // If BACKEND_FINAL_SUBMIT_URL provided -> send multipart/form-data to backend
+    if(BACKEND_FINAL_SUBMIT_URL){
+      try{
+        el('submitResult').textContent = 'Uploading to backend...';
+        const fd = new FormData();
+        fd.append('pdf', blob, `employee_${(state.login.name||'employee').replace(/\s+/g,'_')}.pdf`);
+        fd.append('payload', JSON.stringify(payload));
+        if(state.uploads.photoFile) fd.append('photo', state.uploads.photoFile);
+        if(state.uploads.signFile) fd.append('signature', state.uploads.signFile);
+        for(const f of state.uploads.docs) fd.append('docs', f);
+        const resp = await fetch(BACKEND_FINAL_SUBMIT_URL, { method:'POST', body: fd });
+        if(!resp.ok) throw new Error(await resp.text());
+        const j = await resp.json();
+        el('submitResult').innerHTML = `<div class="text-success">Submitted. Server: ${j.message || 'OK'}</div>`;
+      }catch(err){ console.error(err); el('submitResult').innerHTML = `<div class="danger">Backend submit failed: ${err.message||err}</div>`; }
+      return;
+    }
+
+    // Else if EmailJS configured -> send via EmailJS (client-side)
+    if(EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY && window.emailjs){
+      try{
+        el('submitResult').textContent = 'Sending via EmailJS...';
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+        // convert pdf blob to base64
+        const base64pdf = await new Promise((res,rej)=> {
+          const r = new FileReader();
+          r.onload = ()=> res(r.result.split(',')[1]);
+          r.onerror = rej;
+          r.readAsDataURL(blob);
+        });
+        // prepare template params (adjust according to your EmailJS template)
+        const params = {
+          to_email: state.login.email,
+          to_name: state.login.name,
+          message: 'Attached is your submitted onboarding form.',
+          attachment_base64: base64pdf,
+          attachment_filename: `employee_${(state.login.name||'employee').replace(/\s+/g,'_')}.pdf`
+        };
+        const resp = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params);
+        el('submitResult').innerHTML = `<div class="text-success">EmailJS sent (status ${resp.status}).</div>`;
+      }catch(err){ console.error(err); el('submitResult').innerHTML = `<div class="danger">EmailJS failed: ${err}</div>`; }
+      return;
+    }
+
+    // Fallback: provide download link and instructions to email manually
+    const url = URL.createObjectURL(blob);
+    el('submitResult').innerHTML = `<div class="alert alert-info">No backend/email configured. <a href="${url}" download="employee_${(state.login.name||'employee').replace(/\s+/g,'_')}.pdf">Click here to download PDF</a> and attach it to your email to send to admin & candidate.</div>`;
+  });
+
+  // Initialize EmailJS if keys present
+  if(EMAILJS_PUBLIC_KEY && window.emailjs) emailjs.init(EMAILJS_PUBLIC_KEY);
+
+  // small UX: enable login fields to pre-fill candidate email/phone if not set
+  el('login_email').addEventListener('input', ()=> { if(!el('cand_email').value) el('cand_email').value = el('login_email').value; });
+  el('login_mobile').addEventListener('input', ()=> { if(!el('cand_phone').value) el('cand_phone').value = el('login_mobile').value; });
+
+})();
+</script>
+</body>
+</html>
