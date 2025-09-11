@@ -40,24 +40,18 @@
 
     <!-- CONFIGURATION: set these values if you have endpoints or EmailJS -->
     <!-- If you have your backend server to handle real Aadhaar OTP & final emailing, set BACKEND_AADHAAR_VERIFY_URL and BACKEND_FINAL_SUBMIT_URL -->
-    <script>
-      // ====== CONFIGURE ======
-      // If you have a backend endpoint that will:
-      //  - /api/send-email-otp  (POST {email}) -> sends OTP to email and returns {ok:true}
-      //  - /api/verify-email-otp (POST {email,otp}) -> returns {ok:true}
-      // set BACKEND_EMAIL_OTP_ENABLED = true and BACKEND_BASE_URL to your server.
-      const BACKEND_BASE_URL = "https://script.google.com/macros/s/AKfycbwxyz123abcXYZ/exec"; // e.g. "https://yourdomain.com" or "http://localhost:5000"
-      const BACKEND_EMAIL_OTP_ENABLED = true; // set true if you have /send-otp & /verify-otp endpoints
-      // UIDAI / Aadhaar: production requires server-side integration with UIDAI. If you have backend to call UIDAI set this:
-      const BACKEND_AADHAAR_VERIFY_URL = ""; // POST { aadhaar } -> server should call UIDAI OTP API and return { ok:true, txnId: "..."} or similar
-      // Final submit endpoint on your backend which will accept multipart/form-data: formData('pdf','payload','photo','signature','docs[]')
-      const BACKEND_FINAL_SUBMIT_URL = ""; // e.g. "https://yourdomain.com/api/submit"
-      // EmailJS optional (client-side) - if you want to use EmailJS, fill these (EmailJS docs required)
-      const EMAILJS_SERVICE_ID = "";
-      const EMAILJS_TEMPLATE_ID = "";
-      const EMAILJS_PUBLIC_KEY = ""; // user/public key from EmailJS
-      // =======================
-    </script>
+   <script>
+  // ====== CONFIGURE ======
+  const BACKEND_BASE_URL = "https://script.google.com/macros/s/AKfycbwMaO6r3pEF5Sf_IHpXoR5PPnsiHQoYlgNk6oeC_q6jFMc7PQTMoemyx5-Ln2NyKS4/exec"; 
+  const BACKEND_EMAIL_OTP_ENABLED = true; 
+  const BACKEND_AADHAAR_VERIFY_URL = ""; 
+  const BACKEND_FINAL_SUBMIT_URL = ""; 
+  const EMAILJS_SERVICE_ID = "";
+  const EMAILJS_TEMPLATE_ID = "";
+  const EMAILJS_PUBLIC_KEY = ""; 
+  // =======================
+</script>
+
 
     <!-- PAGE 0: LOGIN -->
     <div id="page-0">
