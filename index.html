@@ -314,7 +314,6 @@
   // Helpers
   const el = id => document.getElementById(id);
   const showStep = i => {
-    // pages: 0..6 correspond to page-0 .. page-6
     for(let p=0;p<=6;p++){
       const node = el('page-'+p);
       if(node) node.style.display = (p===i)?'block':'none';
@@ -338,62 +337,94 @@
   };
 
   // ====== LOGIN EMAIL OTP ======
-  // demo OTP store
   let demoEmailOtp = null;
+
+  // Send OTP
   el('btnSendEmailOtp').addEventListener('click', async ()=>{
     const email = el('login_email').value.trim();
     const name = el('login_name').value.trim();
     const mobile = el('login_mobile').value.trim();
-    if(!email){ el('sendOtpMsg').textContent='Please enter email'; return; }
+    if(!email){ 
+      el('sendOtpMsg').textContent='Please enter email'; 
+      return; 
+    }
     state.login = { name,mobile,email,emailVerified:false };
-    // If backend OTP enabled, call it
+
     if(BACKEND_EMAIL_OTP_ENABLED && BACKEND_BASE_URL){
       try{
         el('sendOtpMsg').textContent='Sending OTP via backend...';
-        const resp = await fetch(BACKEND_BASE_URL + '/send-otp', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+        const resp = await fetch(BACKEND_BASE_URL, {
+          method:'POST',
+          headers:{'Content-Type':'application/x-www-form-urlencoded'},
+          body: new URLSearchParams({
+            action:'send-otp',
+            email: email
+          })
+        });
         const j = await resp.json();
         el('sendOtpMsg').textContent = j.message || 'OTP sent (backend)';
       }catch(err){
-        console.error(err); el('sendOtpMsg').textContent='Backend OTP failed, using demo';
+        console.error(err); 
+        el('sendOtpMsg').textContent='Backend OTP failed, using demo';
         makeDemoEmailOtp(email);
       }
     } else {
-      // demo flow: generate OTP and show in console (or optionally EmailJS)
       makeDemoEmailOtp(email);
     }
   });
 
   function makeDemoEmailOtp(email){
     demoEmailOtp = String(Math.floor(100000 + Math.random()*900000));
-    console.log('Demo Email OTP for',email,':', demoEmailOtp);
+    console.log('Demo Email OTP for', email, ':', demoEmailOtp);
     el('sendOtpMsg').textContent='Demo OTP generated — check browser console. (Use for testing)';
   }
 
+  // Verify OTP
   el('btnVerifyEmailOtp').addEventListener('click', async ()=>{
     const otp = el('login_email_otp').value.trim();
     const email = el('login_email').value.trim();
+
     if(BACKEND_EMAIL_OTP_ENABLED && BACKEND_BASE_URL){
-      // verify via backend
       try{
         el('verifyEmailMsg').textContent='Verifying...';
-        const resp = await fetch(BACKEND_BASE_URL + '/verify-otp', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,otp})});
+        const resp = await fetch(BACKEND_BASE_URL, {
+          method:'POST',
+          headers:{'Content-Type':'application/x-www-form-urlencoded'},
+          body: new URLSearchParams({
+            action:'verify-otp',
+            email: email,
+            otp: otp
+          })
+        });
         const j = await resp.json();
-        if(j.success){ el('verifyEmailMsg').textContent='Verified'; state.login.emailVerified=true; el('toAadhaar').disabled=false; }
-        else el('verifyEmailMsg').textContent='Invalid OTP';
+        if(j.ok){
+          el('verifyEmailMsg').textContent='Verified ✅';
+          state.login.emailVerified=true; 
+          el('toAadhaar').disabled=false;
+        } else {
+          el('verifyEmailMsg').textContent=j.message || 'Invalid OTP';
+        }
       }catch(err){
-        console.error(err); el('verifyEmailMsg').textContent='Backend verify failed';
+        console.error(err); 
+        el('verifyEmailMsg').textContent='Backend verify failed';
       }
     } else {
       // demo verify
       if(otp && demoEmailOtp && otp===demoEmailOtp){
         el('verifyEmailMsg').textContent='Verified (demo)';
-        state.login.emailVerified=true; el('toAadhaar').disabled=false;
-      } else el('verifyEmailMsg').textContent='Incorrect OTP (demo)';
+        state.login.emailVerified=true; 
+        el('toAadhaar').disabled=false;
+      } else {
+        el('verifyEmailMsg').textContent='Incorrect OTP (demo)';
+      }
     }
   });
 
+  // Navigation
   el('toAadhaar').addEventListener('click', ()=> showStep(1));
   el('backToLogin').addEventListener('click', ()=> showStep(0));
+})();
+
 
   // ====== AADHAAR PAGE ======
   let demoAadhaarOtp = null;
