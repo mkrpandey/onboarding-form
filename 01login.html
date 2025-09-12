@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🖊Air Flow Pvt. Ltd. Typing Test</title>  
+  <title>Air Flow Pvt. Ltd. Onboarding</title>  
   <link rel="icon" type="image/png" href="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
@@ -36,7 +36,7 @@
       font-weight: 600;
       font-size: 36px;
     }
-    .container, #test-area, #results, #finalSubmitBtn {
+    .container, #test-area, #results {
       display: none;
       max-width: 800px;
       margin: 30px auto;
@@ -52,7 +52,7 @@
       padding: 30px;
       min-height: 80vh;
     }
-       .left {
+    .left {
       flex: 0 0 40%;
       display: flex;
       justify-content: center;
@@ -67,7 +67,9 @@
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    .right h3 { text-align: center; margin-bottom: 15px; font-weight: 600; }
+    .right h3 { 
+      text-align: center; margin-bottom: 15px; font-weight: 600; 
+    }
     input[type="text"], input[type="email"] {
       width: 100%;
       padding: 12px 15px;
@@ -75,6 +77,7 @@
       border: 1px solid #ddd;
       border-radius: 25px;
       outline: none;
+      font-size: 16px;
     }
     .error {
       color: red;
@@ -131,270 +134,51 @@
   </style>
 </head>
 <body>
-<div class="header">
-  <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" alt="Logo" />
-  <h2>🖋Air Flow Pvt. Ltd. Typing Speed Test</h2>
-</div>
-
-<!-- Login Page -->
-<div class="login-container" id="loginPage">
-  <div class="left">
-    <img 
-      src="https://static.vecteezy.com/system/resources/previews/001/883/463/original/young-man-using-desktop-computer-sitting-in-chair-with-desk-free-vector.jpg" 
-      alt="Illustration"
-      style="width: 100%; height: auto; border-radius: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+  <div class="header">
+    <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" alt="Logo" />
+    <h2>Air Flow Pvt. Ltd. Onboarding</h2>
   </div>
-  <div class="right">
-    <h3>👤Login</h3>
-    <input type="text" id="name" placeholder="Your Name" required />
-    <div class="error" id="nameError">Please enter a valid name.</div>
-    <input type="email" id="email" placeholder="Your Email" required />
-    <div class="error" id="emailError">Please enter a valid email.</div>
-    <button onclick="startTyping()">Submit</button>
+
+  <!-- Login Section -->
+  <div class="login-container" id="loginPage">
+    <div class="left">
+      <img 
+        src="https://static.tildacdn.com/tild6139-3137-4563-a566-316439303538/Frame_17.png" 
+        alt="Illustration"
+        style="width: 100%; height: auto; border-radius: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+      >
+    </div>
+    <div class="right">
+      <h3>👤 Login</h3>
+      <input type="text" id="name" placeholder="Your Name" required />
+      <div class="error" id="nameError">Please enter a valid name.</div>
+      <input type="email" id="email" placeholder="Your Email" required />
+      <div class="error" id="emailError">Please enter a valid email.</div>
+      
+      <button onclick="alert('Send OTP functionality not implemented')">Send OTP</button>
+      
+      <div id="otpSection" style="display: none; margin-top: 15px;">
+        <input type="text" id="otp" placeholder="Enter OTP" maxlength="6" />
+        <div class="error" id="otpError">Invalid OTP. Please try again.</div>
+        <button onclick="alert('Verify OTP & Start not implemented')">Verify OTP & Start</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Typing Test Area -->
-<div class="container" id="test-area">
-  <div class="timer" id="timer">01:00</div>
-  <div id="paragraph"></div>
-  <textarea id="typing-box" disabled placeholder="Start typing here..."></textarea>
-</div>
-
-<!-- Results -->
-<div class="container" id="results"></div>
-<!-- <div class="container"><button id="finalSubmitBtn" onclick="submitToSheet()">Submit</button></div> -->
-
-<script>
-  const paragraphs = [
-    "Artificial Intelligence, also called AI, is a smart technology that helps machines think and act like humans. AI can learn from data and improve over time. For example, when you use your phone, AI helps in face unlock, voice assistants like Siri or Google Assistant, and even in typing suggestions. AI is not magic, but a way to teach computers to do tasks that need human intelligence.\nToday, AI is used almost everywhere. On social media, AI suggests posts and friends you may like. In shopping apps, AI shows products based on your interest. AI helps doctors find diseases faster by looking at medical images. It is also used in self-driving cars that can sense traffic and decide where to go. Many chatbots on websites are powered by AI to answer our questions quickly.\nAI saves time and makes life easy. It can do boring and repeated work quickly. AI can read large data and give useful results which humans may miss. In factories, AI robots help in making products faster and safer. AI also helps farmers to know when to water crops and protect them from pests. AI is becoming part of our daily life slowly but strongly.\nIn the future, AI will bring even more changes. Some people worry AI may take away some jobs, but it can also create new jobs. It is important to learn how AI works so we can use it properly. AI is a tool, and humans must use it wisely to help society.",
-    "Cloud Computing is a technology where we can store and use data and software on the internet instead of our computer’s hard disk. It is called “cloud” because we can access it from anywhere, just like seeing clouds in the sky. For example, when you save photos on Google Drive or watch movies on Netflix, you are using cloud computing.\nCloud computing saves space on our phones and computers. It also keeps data safe even if your device breaks. People can share documents easily using cloud apps like Google Docs. Big companies use cloud to keep their data and to run websites faster. The cloud can also give more storage and power when needed, which saves money.\nStudents use the cloud to do projects together, store notes, and submit homework online. Teachers use it to share study materials with students anytime. Apps like YouTube, Gmail, Facebook, and Instagram all run on cloud. Even banks use cloud to store customer details safely.\nIn the future, more people and companies will use the cloud because it is fast, cheap, and flexible. But it is important to protect cloud data from hackers. Learning about cloud computing is useful for students because it is part of almost every business today.",
-    "The Internet of Things (IoT) is a new technology where normal things like lights, fans, watches, and cars can connect to the internet. This helps them work smarter. For example, a smartwatch counts your steps and shows health tips on your phone. A smart bulb can be turned on or off by your phone even if you are not at home.\nIoT saves time and makes life easy. Smart fridges can tell when milk is over. Smart cars show traffic on screen so you can avoid busy roads. In cities, IoT helps control street lights and traffic signals automatically. Farmers use IoT to check soil and water plants only when needed. IoT helps in hospitals to watch patient’s health all the time.\nMany people use fitness bands to check heart rate. Homes have smart door locks that can be opened with phones. In offices, smart ACs turn off when no one is inside to save power. Even schools can use IoT to send messages to parents when students enter or leave school.\nIn the future, IoT will connect even more devices. It will help save energy, water, and time. But it is important to keep data safe. Learning IoT basics will help students get good jobs in the future.",
-    "Cybersecurity is the way to protect computers, phones, and data on the internet from attacks by hackers. Just like we lock our homes to keep them safe, cybersecurity keeps our online life safe. Hackers try to steal passwords, money, or personal information. Cybersecurity uses tools and rules to stop them.\nToday, we use the internet for banking, shopping, studying, and even talking with friends. Without cybersecurity, hackers could steal money from bank accounts or share private photos. It is very important to keep data safe, especially for students and young people who use phones and social media daily.\nSimple steps help a lot: like using strong passwords, not sharing passwords with anyone, and not clicking unknown links. Keeping phones and computers updated is also important because updates fix old security problems. Using antivirus software keeps harmful files away.\nIn the future, as technology grows, hackers may also get smarter. More jobs will need cybersecurity experts to protect data. Learning about cybersecurity helps everyone stay safe and helps students get jobs too.",
-    "Robotics is the study and making of robots. Robots are smart machines that help humans do different tasks. Some robots look like humans, but many look like arms, wheels, or even small boxes. Robotics combines engineering, computer science, and electronics to build robots.\nRobots work in factories to build cars, pack food, or paint walls. In hospitals, robots help doctors do surgeries more safely. At home, we have small robots that clean floors. Robots are also used in space to explore planets where humans cannot go.\nRobots can do boring, dangerous, or heavy work. They work 24 hours without getting tired. Robots also help disabled people by making special hands or legs that move using signals from the brain. In shops and airports, robots give information and help people find places.\nIn the future, robots may teach in schools, help old people, and even cook food. Students who learn robotics today can create new robots tomorrow. Robotics is growing fast and brings exciting new jobs.",
-    "Virtual Reality (VR) is a special technology that creates a computer-made world where we can feel we are inside. We use VR headsets that cover our eyes and show 3D images. When we move our head, the view changes like in real life. It feels like visiting a new place while staying at home.\nVR is used in games where players feel they are inside the game world. In schools, VR helps students see historical places, science labs, or planets closely. Doctors use VR to practice surgeries safely. In the army, VR helps soldiers train without danger.\nWith VR, students can watch the inside of the human body, walk on the moon, or visit famous monuments. It makes lessons interesting and easy to remember. People can also travel virtually to places they cannot visit in real life.\nIn the future, VR may be used in online shopping to try clothes, in meetings to feel everyone is together, or to watch sports as if sitting in the stadium. Learning VR today will help students work in new fields tomorrow.",
-    "Blockchain is a new way to store data safely. It keeps data in small blocks, and these blocks are linked like a chain. Once data is saved in a block, it cannot be changed easily. This makes blockchain very secure. Blockchain does not need one central place; many computers keep the same copy of data. This is why it is called 'decentralized.'\nBlockchain is famous because of cryptocurrencies like Bitcoin, which use it to keep records of buying and selling safely. But blockchain can do more. It can be used in banks to keep safe records of money. Hospitals can use it to save patient data. Even supply chains use blockchain to track where goods come from.\nBlockchain makes data safe, transparent, and quick to check. Because data is shared on many computers, hackers cannot easily change it. This helps stop fraud and makes business trusted. It also removes middlemen, so work becomes faster and cheaper.\nIn the future, blockchain may be used for voting, ID cards, online education certificates, and even in music and movies to protect creators. Students who learn blockchain can get jobs in IT, banking, health, and many more fields.",
-    "5G means the fifth generation of mobile networks. It is much faster than 4G. With 5G, we can download movies in seconds and enjoy video calls without breaks. 5G uses new technology and more towers to send data quickly.\n5G is not only for phones. Self-driving cars use 5G to talk to each other and avoid accidents. In hospitals, doctors can do surgeries from far away with robots using 5G. In smart cities, 5G helps control traffic and save energy.\n5G makes internet speed super fast and connects many devices at once. It helps students watch live classes without buffering. Factories use 5G to run smart machines. Gamers enjoy online games with no delay.\nIn the future, 5G will help in virtual reality, smart homes, and even flying taxis. Students who learn about 5G today can work in telecom, robotics, and smart city projects."
-  ];
-
- let totalDuration = 60;
-  let timeLeft = totalDuration;
-  let activeTimer;
-  let inactivityTimer;
-  let timerRunning = false;
-  let selectedText = "";
-
-  function startTyping() {
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const nameRegex = /^[a-zA-Z ]+$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    let valid = true;
-    if (!nameRegex.test(name)) {
-      document.getElementById("nameError").style.display = "block";
-      valid = false;
-    } else {
-      document.getElementById("nameError").style.display = "none";
-    }
-
-    if (!emailRegex.test(email)) {
-      document.getElementById("emailError").style.display = "block";
-      valid = false;
-    } else {
-      document.getElementById("emailError").style.display = "none";
-    }
-
-    if (!valid) return;
-
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("test-area").style.display = "block";
-
-    // ✅ Randomly select a different paragraph every time
-    selectedText = paragraphs[Math.floor(Math.random() * paragraphs.length)];
-    renderParagraph();
-
-    const typingBox = document.getElementById("typing-box");
-    typingBox.disabled = false;
-    typingBox.focus();
-    timeLeft = totalDuration;
-    updateTimerDisplay();
-
-    typingBox.addEventListener("input", () => {
-      clearTimeout(inactivityTimer);
-      startMainTimer();
-      inactivityTimer = setTimeout(() => pauseMainTimer(), 1000);
-      renderParagraph();
-    });
-  }
-
-  function updateTimerDisplay() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    document.getElementById("timer").innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  }
-
-  function startMainTimer() {
-    if (timerRunning) return;
-    timerRunning = true;
-    activeTimer = setInterval(() => {
-      timeLeft--;
-      updateTimerDisplay();
-      if (timeLeft <= 0) {
-        clearInterval(activeTimer);
-        finishTest();
-      }
-    }, 1000);
-  }
-
-  function pauseMainTimer() {
-    clearInterval(activeTimer);
-    timerRunning = false;
-  }
-
-  function renderParagraph() {
-    const typedText = document.getElementById("typing-box").value;
-    let html = "";
-    for (let i = 0; i < selectedText.length; i++) {
-      if (i < typedText.length) {
-        const correctChar = selectedText[i];
-        const typedChar = typedText[i];
-        if (typedChar === correctChar) {
-          html += `<span class="correct">${correctChar}</span>`;
-        } else {
-          html += `<span class="incorrect">${correctChar}</span>`;
-        }
-      } else if (i === typedText.length) {
-        html += `<span class="highlight">${selectedText[i]}</span>`;
-      } else {
-        html += `<span>${selectedText[i]}</span>`;
-      }
-    }
-    document.getElementById("paragraph").innerHTML = html;
-  }
-
-function finishTest() {
-  pauseMainTimer();
-
-  const typedText = document.getElementById("typing-box").value.trim();
-  const originalText = selectedText.trim();
-
-  const typedWords = typedText.split(/\s+/).filter(w => w.length > 0);
-  const originalWords = originalText.split(/\s+/).filter(w => w.length > 0);
-
-  let correctWords = 0;
-  const wordCount = Math.min(typedWords.length, originalWords.length);
-
-  for (let i = 0; i < wordCount; i++) {
-    if (typedWords[i] === originalWords[i]) correctWords++;
-  }
-
-  const totalWords = typedWords.length;
-  const accuracy = totalWords > 0 ? Math.round((correctWords / totalWords) * 100) : 0;
-
-  const timeTaken = totalDuration - timeLeft;
-  const wpm = timeTaken > 0 ? Math.round((totalWords / timeTaken) * 60) : 0;
-
-  document.getElementById("typing-box").disabled = true;
-  document.getElementById("test-area").style.display = "none";
-
-document.getElementById("results").innerHTML = `
-  <h3>Test Result</h3>
-  <p><strong>Name:</strong> ${document.getElementById("name").value}</p>
-  <p><strong>Email:</strong> ${document.getElementById("email").value}</p>
-  <p><strong>WPM:</strong> ${wpm}</p>
-  <p><strong>Accuracy:</strong> ${accuracy}%</p>
-  <p><strong>Total Words Typed:</strong> ${totalWords}</p>
-  <p><strong>Correct Words:</strong> ${correctWords}</p>
-  <div style="margin-top:20px;">
-    <button 
-      id="finalSubmitBtn"
-      type="button"
-      onclick="submitToSheet()" 
-      style="background: linear-gradient(to right, #2dd4bf, #3b82f6);
-           color: white;
-           padding: 15px 40px;
-           font-size: 18px;
-           font-weight: bold;
-           border: none;
-           border-radius: 50px;
-           cursor: pointer;">
-      Please! Submit Your Result
-    </button>
+  <!-- Typing Test Area (initially hidden) -->
+  <div class="container" id="test-area">
+    <div class="timer" id="timer">01:00</div>
+    <div id="paragraph">Your typing test will appear here.</div>
+    <textarea id="typing-box" disabled placeholder="Start typing here..."></textarea>
   </div>
-`;
 
-  document.getElementById("results").style.display = "block";
-  document.getElementById("finalSubmitBtn").style.display = "block";
-
-  window.resultData = {
-    name: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    wpm,
-    accuracy,
-    totalWords,
-    correctWords
-  };
-}
-function submitToSheet() {
-  const formBaseURL = "https://docs.google.com/forms/d/e/1FAIpQLSdrV_MCvdC0-v-EY9QLUAcUh15cAX-0Cbc8pbmyqEcSswuwFQ/formResponse";
-
-  const params = new URLSearchParams({
-    "entry.1239245755": window.resultData.name,
-    "entry.1202560839": window.resultData.email,
-    "entry.1945685852": window.resultData.wpm,
-    "entry.710656876": window.resultData.accuracy,
-    "entry.1233596875": window.resultData.totalWords,
-    "entry.1193619231": window.resultData.correctWords
-  });
-
-  // Data submit (background me)
-  fetch(`${formBaseURL}?${params.toString()}`, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-  });
-
-  // Success popup create
-  const popup = document.createElement("div");
-  popup.innerText = "✅ Successfully Submitted!";
-  popup.style.position = "fixed";
-  popup.style.top = "50%";
-  popup.style.left = "50%";
-  popup.style.transform = "translate(-50%, -50%)";
-  popup.style.background = "linear-gradient(to right, #2dd4bf, #3b82f6)";
-  popup.style.color = "white";
-  popup.style.padding = "20px 30px";
-  popup.style.fontSize = "20px";
-  popup.style.fontWeight = "bold";
-  popup.style.borderRadius = "10px";
-  popup.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
-  popup.style.zIndex = "9999";
-  popup.style.opacity = "1";
-  popup.style.transition = "opacity 1s ease";
-
-  document.body.appendChild(popup);
-
-  // 2 sec me fade out
-  setTimeout(() => {
-    popup.style.opacity = "0";
-  }, 2000);
-
-  // 3 sec baad remove popup aur login page dikhao
-  setTimeout(() => {
-    popup.remove();
-    document.getElementById('results').style.display = 'none';
-    document.getElementById('loginPage').style.display = 'flex';
-  }, 3000);
-
-  // 5 sec baad refresh
-  setTimeout(() => {
-    location.reload();
-  }, 1000);
-}
-
-</script>
+  <!-- Results Section -->
+  <div class="container" id="results">
+    <h3>Results</h3>
+    <p>WPM: <span id="wpm">0</span></p>
+    <p>Accuracy: <span id="accuracy">0%</span></p>
+    <p>Total Words: <span id="totalWords">0</span></p>
+    <p>Correct Words: <span id="correctWords">0</span></p>
+  </div>
 </body>
 </html>
