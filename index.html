@@ -150,9 +150,13 @@
     <div class="error" id="nameError">Please enter a valid name.</div>
     <input type="email" id="email" placeholder="Your Email" required />
     <div class="error" id="emailError">Please enter a valid email.</div>
-    <button onclick="startTyping()">Submit</button>
-  </div>
-</div>
+    <button onclick="sendOTP()">Send OTP</button>
+    <!-- OTP Input Field - Hidden Initially -->
+    <div id="otpSection" style="display:none; margin-top: 10px;">
+      <input type="text" id="otp" placeholder="Enter OTP" maxlength="6" />
+      <div class="error" id="otpError">Invalid OTP.</div>
+      <button onclick="verifyOTP()">Verify OTP & Start</button>
+    </div>
 
 <!-- Typing Test Area -->
 <div class="container" id="test-area">
