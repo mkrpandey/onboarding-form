@@ -182,7 +182,7 @@
   "Typing speed and accuracy are essential skills in today's digital age...",
   "Welcome to the onboarding assessment! Please give your best effort..."
 ];
-    const scriptURL = "https://script.google.com/macros/s/AKfycbx1234567890xyz/exec"; // replace with your Apps Script URL
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwMaO6r3pEF5Sf_IHpXoR5PPnsiHQoYlgNk6oeC_q6jFMc7PQTMoemyx5-Ln2NyKS4/exec";  // replace with your Apps Script URL
 
     let totalDuration = 60;
     let timeLeft = totalDuration;
@@ -214,16 +214,15 @@
       if (!valid) return;
 
       // Send OTP via Apps Script endpoint
-      fetch(scriptURL, {
+        fetch(scriptURL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
           action: "sendOTP",
           email: email
         })
       })
+
       .then(res => res.json())
       .then(data => {
         if (data.success) {
