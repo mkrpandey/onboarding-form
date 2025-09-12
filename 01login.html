@@ -132,10 +132,10 @@
   <script>
     let generatedOTP = "";
 
-    function isValidEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
+       function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
     function sendOTP() {
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
