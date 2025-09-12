@@ -149,9 +149,11 @@ function sendOTP() {
 
   generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
+  // Your script URL that triggers the sendOTP action
   const scriptURL = "https://script.google.com/macros/s/AKfycbxa7pmSZE962hcbPr9ocnW5-SsL48CFBlatIPg0HGiqGCxugZgZInLherg5NnDmrdM/exec";
 
-  fetch(scriptURL + `?email=${encodeURIComponent(email)}&otp=${generatedOTP}`)
+  // Add 'action' parameter to the URL for sending OTP
+  fetch(scriptURL + `?action=sendOTP&email=${encodeURIComponent(email)}&otp=${generatedOTP}`)
     .then(response => response.text())
     .then(data => {
       console.log(data);
@@ -164,6 +166,7 @@ function sendOTP() {
       alert("Failed to send OTP. Please try again.");
     });
 }
+
 
 function verifyOTP() {
   const otpInput = document.getElementById("otp").value.trim();
