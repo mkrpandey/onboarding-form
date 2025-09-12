@@ -191,92 +191,122 @@
     let selectedText = "";
 
     function sendOTP() {
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const nameRegex = /^[a-zA-Z ]+$/;
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      let valid = true;
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const nameRegex = /^[a-zA-Z ]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  let valid = true;
 
-      if (!nameRegex.test(name)) {
-        document.getElementById("nameError").style.display = "block";
-        valid = false;
-      } else {
-        document.getElementById("nameError").style.display = "none";
-      }
+  if (!nameRegex.test(name)) {
+    document.getElementById("nameError").style.display = "block";
+    valid = false;
+  } else {
+    document.getElementById("nameError").style.display = "none";
+  }
 
-      if (!emailRegex.test(email)) {
-        document.getElementById("emailError").style.display = "block";
-        valid = false;
-      } else {
-        document.getElementById("emailError").style.display = "none";
-      }
+  if (!emailRegex.test(email)) {
+    document.getElementById("emailError").style.display = "block";
+    valid = false;
+  } else {
+    document.getElementById("emailError").style.display = "none";
+  }
 
-      if (!valid) return;
+  if (!valid) return;
 
-      // Send OTP via Apps Script endpoint
-        fetch(scriptURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          action: "sendOTP",
-          email: email
-        })
-      })
-
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert("✅ OTP sent to your email.");
-          document.getElementById("otpSection").style.display = "block";
-        } else {
-          alert("❌ Failed to send OTP. Please try again.");
-        }
-      })
-      .catch(error => {
-        console.error("Error sending OTP:", error);
-        alert("❌ Error sending OTP. Please check console.");
-      });
+  // Ab Google Apps Script endpoint ko call karo
+  fetch(scriptURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      action: 'sendOTP',
+      email: email
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('OTP sent to your email!');
+      document.getElementById('otpSection').style.display = 'block';
+    } else {
+      alert('Error sending OTP: ' + data.message);
     }
+  })
+  .catch(error => {
+    alert('Error: ' + error.message);
+  });
+}
+function verifyOTP() {
+  const email = document.getElementById("email").value.trim();
+  const otp = document.getElementById("otp").value.trim();
 
-    function verifyOTP() {
-      const email = document.getElementById("email").value.trim();
-      const otp = document.getElementById("otp").value.trim();
+  if (otp.length !== 6) {
+    document.getElementById("otpError").style.display = "block";
+    return;
+  } else {
+    document.getElementById("otpError").style.display = "none";
+  }
 
-      if (otp.length !== 6) {
-        document.getElementById("otpError").style.display = "block";
-        return;
-      } else {
-        document.getElementById("otpError").style.display = "none";
-      }
-
-      fetch(scriptURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          action: "verifyOTP",
-          email: email,
-          otp: otp
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.verified) {
-          alert("✅ OTP Verified! Starting test...");
-          // Hide login area and start typing test
-          document.getElementById("loginPage").style.display = "none";
-          document.getElementById("test-area").style.display = "block";
-          startTypingAfterOTP();  
-        } else {
-          document.getElementById("otpError").style.display = "block";
-        }
-      })
-      .catch(error => {
-        console.error("Error verifying OTP:", error);
-        alert("❌ Error verifying OTP.");
-      });
+  fetch(scriptURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      action: 'verifyOTP',
+      email: email,
+      otp: otp
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.verified) {
+      alert('OTP Verified! Starting test...');
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("test-area").style.display = "block";
+      startTypingAfterOTP();
+    } else {
+      document.getElementById("otpError").style.display = "block";
+      document.getElementById("otpError").innerText = data.message;
     }
+  })
+  .catch(error => {
+    alert('Error: ' + error.message);
+  });
+}
+function verifyOTP() {
+  const email = document.getElementById("email").value.trim();
+  const otp = document.getElementById("otp").value.trim();
+
+  if (otp.length !== 6) {
+    document.getElementById("otpError").style.display = "block";
+    return;
+  } else {
+    document.getElementById("otpError").style.display = "none";
+  }
+
+  fetch(scriptURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      action: 'verifyOTP',
+      email: email,
+      otp: otp
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.verified) {
+      alert('OTP Verified! Starting test...');
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("test-area").style.display = "block";
+      startTypingAfterOTP();
+    } else {
+      document.getElementById("otpError").style.display = "block";
+      document.getElementById("otpError").innerText = data.message;
+    }
+  })
+  .catch(error => {
+    alert('Error: ' + error.message);
+  });
+}
 
     function startTypingAfterOTP() {
       // This is similar to your existing startTyping(), but without re-checking OTP since it's done
