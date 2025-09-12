@@ -1,537 +1,400 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Employee Onboarding — Responsive</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🖊Air Flow Pvt. Ltd. Onboarding</title>  
+  <link rel="icon" type="image/png" href="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: #f4f6fb;
+      font-family: 'Poppins', sans-serif;
+      background: #e6f4ff;
+      color: #333;
+      padding-top: 140px;
     }
-    .onboard-card {
-      max-width: 500px;
-      width: 100%;
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      padding: 20px 40px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
-    .page { display: none; }
-    .page.active { display: block; }
-    .small-note { font-size: 0.85rem; color: #666; }
-    #sigCanvas {
+    .header img {
+      height: 100px;
+      filter: brightness(1.2) contrast(1.3);
+    }
+    .header h2 {
+      color: #003366;
+      font-weight: 600;
+      font-size: 36px;
+    }
+    .container, #test-area, #results, #finalSubmitBtn {
+      display: none;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      min-height: 80vh;
+    }
+       .left {
+      flex: 0 0 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: auto;
+    }
+    .right {
+      flex: 0 0 300px;
+      background: #fff;
+      margin-left: 30px;
+      padding: 30px 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .right h3 { text-align: center; margin-bottom: 15px; font-weight: 600; }
+    input[type="text"], input[type="email"] {
       width: 100%;
-      height: 150px;
+      padding: 12px 15px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      outline: none;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(to right, #36d1dc, #5b86e5);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: opacity 0.3s;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #paragraph {
+      white-space: pre-wrap;
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    #typing-box {
+      width: 100%;
+      height: 200px;
+      padding: 10px;
+      font-size: 16px;
       border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .timer {
+      text-align: right;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .highlight {
+      background-color: yellow;
+    }
+    .correct {
+      color: green;
+    }
+    .incorrect {
+      color: red;
     }
   </style>
 </head>
 <body>
+<div class="header">
+  <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" alt="Logo" />
+  <h2>🖋Air Flow Pvt. Ltd. Typing Speed Test</h2>
+</div>
 
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="card shadow-sm onboard-card">
-    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="m-0">Air Flow Pvt. Ltd.</h4>
-        <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" alt="Logo" style="max-width:90px;">
-      </div>
-
-      <!-- Page 1 : Login -->
-      <div id="page1" class="page active">
-        <h5>1 — Login / Email OTP</h5>
-        <form id="form1" onsubmit="return false;">
-          <div class="mb-2">
-            <label class="form-label">Full Name</label>
-            <input id="name" class="form-control" required>
-          </div>
-          <div class="mb-2">
-            <label class="form-label">Mobile Number</label>
-            <input id="mobile" class="form-control" pattern="[0-9]{10}" maxlength="10" required>
-          </div>
-          <div class="mb-2">
-            <label class="form-label">Email</label>
-            <input id="email" type="email" class="form-control" required>
-          </div>
-          <div class="d-flex gap-2 mb-2">
-            <button id="sendEmailOtpBtn" class="btn btn-primary btn-sm">Send Email OTP</button>
-            <input id="emailOtpInput" class="form-control form-control-sm" placeholder="Enter OTP" style="max-width:150px">
-            <button id="verifyEmailOtpBtn" class="btn btn-success btn-sm" disabled>Verify OTP</button>
-          </div>
-          <div id="form1msg" class="mt-1 small-note text-danger"></div>
-        </form>
-      </div>
-
-
-        <!-- Page 2 : Aadhar & Mobile OTP -->
-        <div id="page2" class="page">
-          <h5>2 — Mobile & Aadhar</h5>
-          <p class="small-note">Wo number bharein jo Aadhar se linked ho (format same as UIDAI, lekin OTP Apps Script se send kareinge).</p>
-          <form id="form2" onsubmit="return false;">
-            <div class="mb-3">
-              <label class="form-label">Mobile Number (Aadhar se same)</label>
-              <input id="aadharMobile" class="form-control" pattern="[0-9]{10}" maxlength="10" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Aadhar Number</label>
-              <input id="aadhar" class="form-control" pattern="[0-9]{12}" maxlength="12" required>
-            </div>
-            <div class="d-flex gap-2">
-              <button id="sendMobileOtpBtn" class="btn btn-primary">Send Mobile OTP</button>
-              <button id="verifyMobileOtpBtn" class="btn btn-success" disabled>Verify Mobile OTP</button>
-              <input id="mobileOtpInput" class="form-control" placeholder="Enter OTP" style="max-width:200px">
-            </div>
-            <div id="form2msg" class="mt-2 small-note text-danger"></div>
-          </form>
-        </div>
-
-        <!-- Page 3 : Candidate Form (placeholder) -->
-        <div id="page3" class="page">
-          <h5>3 — Candidate Form</h5>
-          <form id="candidateForm" onsubmit="return false;">
-            <!-- Replace these fields with the exact format you will provide later -->
-            <div class="mb-3">
-              <label class="form-label">Father's / Guardian's Name</label>
-              <input id="cand_guardian" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Date of Birth</label>
-              <input id="cand_dob" type="date" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Address</label>
-              <textarea id="cand_address" class="form-control" rows="3"></textarea>
-            </div>
-            <div class="d-flex justify-content-between">
-              <button class="btn btn-secondary" onclick="prevPage(3)">Back</button>
-              <button id="candNext" class="btn btn-primary">Save & Next</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Page 4 : Background Verification -->
-        <div id="page4" class="page">
-          <h5>4 — Background Verification</h5>
-          <form id="bgForm" onsubmit="return false;">
-            <!-- Placeholder fields -->
-            <div class="mb-3">
-              <label class="form-label">Previous Employer</label>
-              <input id="prev_emp" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Reference Contact</label>
-              <input id="ref_contact" class="form-control">
-            </div>
-            <div class="d-flex justify-content-between">
-              <button class="btn btn-secondary" onclick="prevPage(4)">Back</button>
-              <button id="bgNext" class="btn btn-primary">Save & Next</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Page 5 : Declaration -->
-        <div id="page5" class="page">
-          <h5>5 — Declaration</h5>
-          <form id="decForm" onsubmit="return false;">
-            <div class="mb-3">
-              <label class="form-label">Declaration Text (agree)</label>
-              <textarea id="dec_text" class="form-control">I hereby declare that all information provided is true.</textarea>
-            </div>
-            <div class="form-check mb-3">
-              <input id="dec_check" type="checkbox" class="form-check-input" required>
-              <label class="form-check-label">I agree</label>
-            </div>
-            <div class="d-flex justify-content-between">
-              <button class="btn btn-secondary" onclick="prevPage(5)">Back</button>
-              <button id="decNext" class="btn btn-primary">Save & Next</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Page 6 : Photo & Signature Upload -->
-        <div id="page6" class="page">
-          <h5>6 — Photo & Signature</h5>
-          <p class="small-note">Photo & signature mein max 200 KB limit set ki gayi hai. Supported: jpg/png.</p>
-          <form id="uploadForm" onsubmit="return false;">
-            <div class="mb-3">
-              <label class="form-label">Upload Photo</label>
-              <input id="photoInput" type="file" accept="image/*" class="form-control" required>
-              <img id="photoPreview" class="mt-2" style="max-width:180px;display:none;border-radius:6px" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Draw Signature (or upload)</label>
-              <canvas id="sigCanvas"></canvas>
-              <div class="mt-2 d-flex gap-2">
-                <button id="clearSig" class="btn btn-sm btn-secondary">Clear</button>
-                <button id="saveSig" class="btn btn-sm btn-primary">Save Signature</button>
-                <input id="sigUpload" type="file" accept="image/*" class="form-control" style="max-width:240px">
-              </div>
-              <img id="sigPreview" class="mt-2" style="max-width:300px;display:none;border-radius:4px" />
-            </div>
-            <div class="d-flex justify-content-between">
-              <button class="btn btn-secondary" onclick="prevPage(6)">Back</button>
-              <button id="uploadNext" class="btn btn-primary">Upload & Next</button>
-            </div>
-            <div id="uploadMsg" class="mt-2 small-note text-danger"></div>
-          </form>
-        </div>
-
-        <!-- Page 7 : Preview all data -->
-        <div id="page7" class="page">
-          <h5>7 — Preview</h5>
-          <div id="previewArea" class="border rounded p-3 bg-white"></div>
-          <div class="d-flex justify-content-between mt-3">
-            <button class="btn btn-secondary" onclick="prevPage(7)">Back</button>
-            <button id="toDownload" class="btn btn-success">Proceed to Download</button>
-          </div>
-        </div>
-
-        <!-- Page 8 : Download & Send PDF -->
-        <div id="page8" class="page">
-          <h5>8 — Download & Email PDF</h5>
-          <p class="small-note">Click Download to generate PDF immediately. PDF will also be sent to the user email (provided at login) and to the admin email you will provide in Apps Script.</p>
-          <div class="d-flex gap-2">
-            <button id="downloadPdf" class="btn btn-primary">Download PDF</button>
-            <button id="sendPdfBtn" class="btn btn-outline-primary">Send PDF to Server & Email</button>
-          </div>
-          <div id="finalMsg" class="mt-2 small-note"></div>
-        </div>
-
-      </div>
-    </div>
+<!-- Login Page -->
+<div class="login-container" id="loginPage">
+  <div class="left">
+    <img 
+      src="https://static.tildacdn.com/tild6139-3137-4563-a566-316439303538/Frame_17.png" 
+      alt="Illustration"
+      style="width: 100%; height: auto; border-radius: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
   </div>
+  <div class="right">
+    <h3>👤Login</h3>
+    <input type="text" id="name" placeholder="Your Name" required />
+    <div class="error" id="nameError">Please enter a valid name.</div>
+    <input type="email" id="email" placeholder="Your Email" required />
+    <div class="error" id="emailError">Please enter a valid email.</div>
+    <button onclick="startTyping()">Submit</button>
+  </div>
+</div>
 
-  <!-- SCRIPT: Client-side logic -->
-  <script>
-    /* -----------------------------
-       IMPORTANT: Replace these placeholders with your deployed Apps Script Web App URLs.
-       Apps Script should expose endpoints (POST) for:
-         1) /sendEmailOtp   -> {email, name}  -> sends email OTP to user
-         2) /verifyEmailOtp -> {email, otp}   -> returns {ok:true} if matches
-         3) /sendMobileOtp  -> {mobile}       -> sends mobile OTP (via email-to-sms or any service) OR simply email the mobile OTP to the user's email. For security, do server-side OTP generation and storage.
-         4) /verifyMobileOtp-> {mobile, otp}  -> verify
-         5) /receivePdf     -> {email, pdfBase64, filename} -> send pdf to user and admin email
-       See the sample Apps Script code included at the bottom of this file (comment).
-    -----------------------------*/
+<!-- Typing Test Area -->
+<div class="container" id="test-area">
+  <div class="timer" id="timer">01:00</div>
+  <div id="paragraph"></div>
+  <textarea id="typing-box" disabled placeholder="Start typing here..."></textarea>
+</div>
 
-   // Base URL of your Apps Script
-   const BASE_URL = 'https://script.google.com/macros/s/AKfycbwZqyAQYYANqZ22t456-bvtGlCJJ6NYLTsVUKaw0w/dev';
-   // Endpoints
-   const APPS_SEND_EMAIL_OTP = BASE_URL + '?action=send-otp';
-   const APPS_VERIFY_EMAIL_OTP = BASE_URL + '?action=verify-otp';
-    
-   const APPS_SEND_MOBILE_OTP = 'REPLACE_WITH_YOUR_APPS_SCRIPT_SEND_MOBILE_OTP_URL';
-   const APPS_VERIFY_MOBILE_OTP = 'REPLACE_WITH_YOUR_APPS_SCRIPT_VERIFY_MOBILE_OTP_URL';
-   const APPS_RECEIVE_PDF = 'REPLACE_WITH_YOUR_APPS_SCRIPT_RECEIVE_PDF_URL';
+<!-- Results -->
+<div class="container" id="results"></div>
+<!-- <div class="container"><button id="finalSubmitBtn" onclick="submitToSheet()">Submit</button></div> -->
 
-    // Simple page router
-    function showPage(n){
-      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-      document.getElementById('page'+n).classList.add('active');
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-    function prevPage(curr){ showPage(curr-1); }
-    function nextPage(curr){ showPage(curr+1); }
+<script>
+  const paragraphs = [
+    "Artificial Intelligence, also called AI, is a smart technology that helps machines think and act like humans. AI can learn from data and improve over time. For example, when you use your phone, AI helps in face unlock, voice assistants like Siri or Google Assistant, and even in typing suggestions. AI is not magic, but a way to teach computers to do tasks that need human intelligence.\nToday, AI is used almost everywhere. On social media, AI suggests posts and friends you may like. In shopping apps, AI shows products based on your interest. AI helps doctors find diseases faster by looking at medical images. It is also used in self-driving cars that can sense traffic and decide where to go. Many chatbots on websites are powered by AI to answer our questions quickly.\nAI saves time and makes life easy. It can do boring and repeated work quickly. AI can read large data and give useful results which humans may miss. In factories, AI robots help in making products faster and safer. AI also helps farmers to know when to water crops and protect them from pests. AI is becoming part of our daily life slowly but strongly.\nIn the future, AI will bring even more changes. Some people worry AI may take away some jobs, but it can also create new jobs. It is important to learn how AI works so we can use it properly. AI is a tool, and humans must use it wisely to help society.",
+    "Cloud Computing is a technology where we can store and use data and software on the internet instead of our computer’s hard disk. It is called “cloud” because we can access it from anywhere, just like seeing clouds in the sky. For example, when you save photos on Google Drive or watch movies on Netflix, you are using cloud computing.\nCloud computing saves space on our phones and computers. It also keeps data safe even if your device breaks. People can share documents easily using cloud apps like Google Docs. Big companies use cloud to keep their data and to run websites faster. The cloud can also give more storage and power when needed, which saves money.\nStudents use the cloud to do projects together, store notes, and submit homework online. Teachers use it to share study materials with students anytime. Apps like YouTube, Gmail, Facebook, and Instagram all run on cloud. Even banks use cloud to store customer details safely.\nIn the future, more people and companies will use the cloud because it is fast, cheap, and flexible. But it is important to protect cloud data from hackers. Learning about cloud computing is useful for students because it is part of almost every business today.",
+    "The Internet of Things (IoT) is a new technology where normal things like lights, fans, watches, and cars can connect to the internet. This helps them work smarter. For example, a smartwatch counts your steps and shows health tips on your phone. A smart bulb can be turned on or off by your phone even if you are not at home.\nIoT saves time and makes life easy. Smart fridges can tell when milk is over. Smart cars show traffic on screen so you can avoid busy roads. In cities, IoT helps control street lights and traffic signals automatically. Farmers use IoT to check soil and water plants only when needed. IoT helps in hospitals to watch patient’s health all the time.\nMany people use fitness bands to check heart rate. Homes have smart door locks that can be opened with phones. In offices, smart ACs turn off when no one is inside to save power. Even schools can use IoT to send messages to parents when students enter or leave school.\nIn the future, IoT will connect even more devices. It will help save energy, water, and time. But it is important to keep data safe. Learning IoT basics will help students get good jobs in the future.",
+    "Cybersecurity is the way to protect computers, phones, and data on the internet from attacks by hackers. Just like we lock our homes to keep them safe, cybersecurity keeps our online life safe. Hackers try to steal passwords, money, or personal information. Cybersecurity uses tools and rules to stop them.\nToday, we use the internet for banking, shopping, studying, and even talking with friends. Without cybersecurity, hackers could steal money from bank accounts or share private photos. It is very important to keep data safe, especially for students and young people who use phones and social media daily.\nSimple steps help a lot: like using strong passwords, not sharing passwords with anyone, and not clicking unknown links. Keeping phones and computers updated is also important because updates fix old security problems. Using antivirus software keeps harmful files away.\nIn the future, as technology grows, hackers may also get smarter. More jobs will need cybersecurity experts to protect data. Learning about cybersecurity helps everyone stay safe and helps students get jobs too.",
+    "Robotics is the study and making of robots. Robots are smart machines that help humans do different tasks. Some robots look like humans, but many look like arms, wheels, or even small boxes. Robotics combines engineering, computer science, and electronics to build robots.\nRobots work in factories to build cars, pack food, or paint walls. In hospitals, robots help doctors do surgeries more safely. At home, we have small robots that clean floors. Robots are also used in space to explore planets where humans cannot go.\nRobots can do boring, dangerous, or heavy work. They work 24 hours without getting tired. Robots also help disabled people by making special hands or legs that move using signals from the brain. In shops and airports, robots give information and help people find places.\nIn the future, robots may teach in schools, help old people, and even cook food. Students who learn robotics today can create new robots tomorrow. Robotics is growing fast and brings exciting new jobs.",
+    "Virtual Reality (VR) is a special technology that creates a computer-made world where we can feel we are inside. We use VR headsets that cover our eyes and show 3D images. When we move our head, the view changes like in real life. It feels like visiting a new place while staying at home.\nVR is used in games where players feel they are inside the game world. In schools, VR helps students see historical places, science labs, or planets closely. Doctors use VR to practice surgeries safely. In the army, VR helps soldiers train without danger.\nWith VR, students can watch the inside of the human body, walk on the moon, or visit famous monuments. It makes lessons interesting and easy to remember. People can also travel virtually to places they cannot visit in real life.\nIn the future, VR may be used in online shopping to try clothes, in meetings to feel everyone is together, or to watch sports as if sitting in the stadium. Learning VR today will help students work in new fields tomorrow.",
+    "Blockchain is a new way to store data safely. It keeps data in small blocks, and these blocks are linked like a chain. Once data is saved in a block, it cannot be changed easily. This makes blockchain very secure. Blockchain does not need one central place; many computers keep the same copy of data. This is why it is called 'decentralized.'\nBlockchain is famous because of cryptocurrencies like Bitcoin, which use it to keep records of buying and selling safely. But blockchain can do more. It can be used in banks to keep safe records of money. Hospitals can use it to save patient data. Even supply chains use blockchain to track where goods come from.\nBlockchain makes data safe, transparent, and quick to check. Because data is shared on many computers, hackers cannot easily change it. This helps stop fraud and makes business trusted. It also removes middlemen, so work becomes faster and cheaper.\nIn the future, blockchain may be used for voting, ID cards, online education certificates, and even in music and movies to protect creators. Students who learn blockchain can get jobs in IT, banking, health, and many more fields.",
+    "5G means the fifth generation of mobile networks. It is much faster than 4G. With 5G, we can download movies in seconds and enjoy video calls without breaks. 5G uses new technology and more towers to send data quickly.\n5G is not only for phones. Self-driving cars use 5G to talk to each other and avoid accidents. In hospitals, doctors can do surgeries from far away with robots using 5G. In smart cities, 5G helps control traffic and save energy.\n5G makes internet speed super fast and connects many devices at once. It helps students watch live classes without buffering. Factories use 5G to run smart machines. Gamers enjoy online games with no delay.\nIn the future, 5G will help in virtual reality, smart homes, and even flying taxis. Students who learn about 5G today can work in telecom, robotics, and smart city projects."
+  ];
 
-    // Page1: Email OTP
-document.getElementById('sendEmailOtpBtn').addEventListener('click', async (e)=>{
-  e.preventDefault();
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const mobile = document.getElementById('mobile').value.trim();
-  const msgEl = document.getElementById('form1msg');
-  msgEl.textContent='';
-  if(!name||!email) { msgEl.textContent='Name and Email required'; return; }
+ let totalDuration = 60;
+  let timeLeft = totalDuration;
+  let activeTimer;
+  let inactivityTimer;
+  let timerRunning = false;
+  let selectedText = "";
 
-  // send OTP using URL params (Apps Script expects e.parameter)
-  try{
-    const res = await fetch(`${APPS_SEND_EMAIL_OTP}&email=${encodeURIComponent(email)}`, {
-      method:'POST'
-    });
-    const j = await res.json();
-    if(j.ok){ 
-      document.getElementById('verifyEmailOtpBtn').disabled=false; 
-      msgEl.textContent='OTP sent to email.'; 
-    } else msgEl.textContent = j.message || 'Failed to send OTP';
-  }catch(err){ msgEl.textContent='Error sending OTP. Check Apps Script URL.' }
-});
+  function startTyping() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const nameRegex = /^[a-zA-Z ]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-document.getElementById('verifyEmailOtpBtn').addEventListener('click', async ()=>{
-  const email = document.getElementById('email').value.trim();
-  const otp = document.getElementById('emailOtpInput').value.trim();
-  const msgEl = document.getElementById('form1msg'); msgEl.textContent='';
-  if(!otp){ msgEl.textContent='Enter OTP'; return; }
-
-  // verify OTP using URL params
-  try{
-    const res = await fetch(`${APPS_VERIFY_EMAIL_OTP}&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {
-      method:'POST'
-    });
-    const j = await res.json();
-    if(j.ok){ 
-      msgEl.classList.remove('text-danger'); 
-      msgEl.classList.add('text-success'); 
-      msgEl.textContent='Email verified!';
-      // store login email in local state
-      window.ONBOARDING = window.ONBOARDING || {};
-      ONBOARDING.name = document.getElementById('name').value.trim();
-      ONBOARDING.email = email; 
-      ONBOARDING.mobile = document.getElementById('mobile').value.trim();
-      setTimeout(()=>nextPage(2),700);
-    } else { msgEl.textContent = j.message || 'Invalid OTP'; }
-  }catch(err){ msgEl.textContent='Error verifying OTP'; }
-});
-
-// Page2: Aadhar & mobile otp
-    document.getElementById('sendMobileOtpBtn').addEventListener('click', async (e)=>{
-      e.preventDefault();
-      const mobile = document.getElementById('aadharMobile').value.trim();
-      const aadhar = document.getElementById('aadhar').value.trim();
-      const msgEl = document.getElementById('form2msg'); msgEl.textContent='';
-      if(!/^\d{12}$/.test(aadhar)){ msgEl.textContent='Aadhar must be 12 digits'; return; }
-      if(!/^\d{10}$/.test(mobile)){ msgEl.textContent='Mobile must be 10 digits'; return; }
-      try{
-        const res = await fetch(APPS_SEND_MOBILE_OTP,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,aadhar})});
-        const j = await res.json();
-        if(j.ok){ document.getElementById('verifyMobileOtpBtn').disabled=false; msgEl.textContent='OTP sent to mobile (via server).'; }
-        else msgEl.textContent = j.error || 'Failed to send OTP';
-      }catch(err){ msgEl.textContent='Error sending mobile OTP. Check Apps Script URL.' }
-    });
-
-    document.getElementById('verifyMobileOtpBtn').addEventListener('click', async ()=>{
-      const mobile = document.getElementById('aadharMobile').value.trim();
-      const otp = document.getElementById('mobileOtpInput').value.trim();
-      const msgEl = document.getElementById('form2msg'); msgEl.textContent='';
-      if(!otp){ msgEl.textContent='Enter OTP'; return; }
-      try{
-        const res = await fetch(APPS_VERIFY_MOBILE_OTP,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,otp})});
-        const j = await res.json();
-        if(j.ok){ msgEl.classList.remove('text-danger'); msgEl.classList.add('text-success'); msgEl.textContent='Mobile & Aadhar verified!';
-          window.ONBOARDING = window.ONBOARDING || {};
-          ONBOARDING.aadhar = document.getElementById('aadhar').value.trim();
-          ONBOARDING.aadharMobile = mobile;
-          setTimeout(()=>nextPage(3),700);
-        } else msgEl.textContent = j.error || 'Invalid OTP';
-      }catch(err){ msgEl.textContent='Error verifying OTP'; }
-    });
-
-    // Candidate/other forms: Save into ONBOARDING state
-    document.getElementById('candNext').addEventListener('click', ()=>{
-      ONBOARDING = ONBOARDING||{};
-      ONBOARDING.guardian = document.getElementById('cand_guardian').value;
-      ONBOARDING.dob = document.getElementById('cand_dob').value;
-      ONBOARDING.address = document.getElementById('cand_address').value;
-      nextPage(4);
-    });
-    document.getElementById('bgNext').addEventListener('click', ()=>{
-      ONBOARDING.prev_emp = document.getElementById('prev_emp').value;
-      ONBOARDING.ref_contact = document.getElementById('ref_contact').value;
-      nextPage(5);
-    });
-    document.getElementById('decNext').addEventListener('click', ()=>{
-      ONBOARDING.dec_text = document.getElementById('dec_text').value;
-      nextPage(6);
-    });
-
-    // Page6: Photo & signature handling
-    const MAX_FILE_BYTES = 200*1024; // 200 KB
-    const photoInput = document.getElementById('photoInput');
-    const photoPreview = document.getElementById('photoPreview');
-    photoInput.addEventListener('change', (e)=>{
-      const f = e.target.files[0];
-      const msg = document.getElementById('uploadMsg'); msg.textContent='';
-      if(!f) return;
-      if(f.size>MAX_FILE_BYTES){ msg.textContent='Photo exceeds 200 KB'; photoInput.value=''; return; }
-      const reader = new FileReader(); reader.onload = ()=>{ photoPreview.src = reader.result; photoPreview.style.display='block'; ONBOARDING.photoBase64 = reader.result; };
-      reader.readAsDataURL(f);
-    });
-
-    // Signature canvas draw
-    const sigCanvas = document.getElementById('sigCanvas');
-    sigCanvas.width = sigCanvas.clientWidth; sigCanvas.height = 200; // explicit
-    const sigCtx = sigCanvas.getContext('2d'); let drawing=false;
-    function pointerDown(e){ drawing=true; sigCtx.beginPath(); sigCtx.moveTo(getX(e),getY(e)); }
-    function pointerMove(e){ if(!drawing) return; sigCtx.lineTo(getX(e),getY(e)); sigCtx.stroke(); }
-    function pointerUp(e){ drawing=false; }
-    function getX(e){ const r=sigCanvas.getBoundingClientRect(); return (e.touches?e.touches[0].clientX:e.clientX)-r.left; }
-    function getY(e){ const r=sigCanvas.getBoundingClientRect(); return (e.touches?e.touches[0].clientY:e.clientY)-r.top; }
-    sigCanvas.addEventListener('pointerdown',pointerDown); sigCanvas.addEventListener('pointermove',pointerMove); sigCanvas.addEventListener('pointerup',pointerUp);
-    document.getElementById('clearSig').addEventListener('click',()=>{ sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); document.getElementById('sigPreview').style.display='none'; delete ONBOARDING.sigBase64; });
-    document.getElementById('saveSig').addEventListener('click',()=>{ const data = sigCanvas.toDataURL('image/png'); document.getElementById('sigPreview').src = data; document.getElementById('sigPreview').style.display='block'; ONBOARDING.sigBase64 = data; });
-
-    // Upload signature via file
-    document.getElementById('sigUpload').addEventListener('change',(e)=>{
-      const f = e.target.files[0]; const msg = document.getElementById('uploadMsg'); msg.textContent='';
-      if(!f) return; if(f.size>MAX_FILE_BYTES){ msg.textContent='Signature file exceeds 200 KB'; e.target.value=''; return; }
-      const reader = new FileReader(); reader.onload = ()=>{ document.getElementById('sigPreview').src = reader.result; document.getElementById('sigPreview').style.display='block'; ONBOARDING.sigBase64 = reader.result; };
-      reader.readAsDataURL(f);
-    });
-
-    document.getElementById('uploadNext').addEventListener('click', ()=>{
-      const msg = document.getElementById('uploadMsg'); msg.textContent='';
-      if(!ONBOARDING.photoBase64){ msg.textContent='Please upload photo'; return; }
-      if(!ONBOARDING.sigBase64){ msg.textContent='Please provide signature'; return; }
-      nextPage(7);
-      renderPreview();
-    });
-
-    // Page7 preview
-    function renderPreview(){
-      const area = document.getElementById('previewArea');
-      const o = ONBOARDING||{};
-      area.innerHTML = `
-        <h6>Personal</h6>
-        <p><strong>Name:</strong> ${o.name||''}<br>
-        <strong>Email:</strong> ${o.email||''}<br>
-        <strong>Mobile:</strong> ${o.mobile||''}<br>
-        <strong>Aadhar:</strong> ${o.aadhar||''}</p>
-        <h6>Candidate</h6>
-        <p><strong>Guardian:</strong> ${o.guardian||''}<br>
-        <strong>DOB:</strong> ${o.dob||''}<br>
-        <strong>Address:</strong> ${o.address||''}</p>
-        <h6>Background</h6>
-        <p><strong>Prev Employer:</strong> ${o.prev_emp||''}<br>
-        <strong>Reference:</strong> ${o.ref_contact||''}</p>
-        <h6>Declaration</h6>
-        <p>${o.dec_text||''}</p>
-        <div class="d-flex gap-3 align-items-center">
-          <div>
-            <p class="mb-1"><strong>Photo</strong></p>
-            ${o.photoBase64?`<img src="${o.photoBase64}" style="max-width:140px;border-radius:6px">`:''}
-          </div>
-          <div>
-            <p class="mb-1"><strong>Signature</strong></p>
-            ${o.sigBase64?`<img src="${o.sigBase64}" style="max-width:260px;border-radius:4px">`:''}
-          </div>
-        </div>
-      `;
+    let valid = true;
+    if (!nameRegex.test(name)) {
+      document.getElementById("nameError").style.display = "block";
+      valid = false;
+    } else {
+      document.getElementById("nameError").style.display = "none";
     }
 
-    document.getElementById('toDownload').addEventListener('click', ()=>{ nextPage(8); });
+    if (!emailRegex.test(email)) {
+      document.getElementById("emailError").style.display = "block";
+      valid = false;
+    } else {
+      document.getElementById("emailError").style.display = "none";
+    }
 
-    // Page8: Generate PDF and download & send to server
-    document.getElementById('downloadPdf').addEventListener('click', async ()=>{
-      const area = document.getElementById('previewArea');
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({unit:'px',format:'a4'});
-      // Use html2canvas to capture
-      const canvas = await html2canvas(area,{scale:2});
-      const img = canvas.toDataURL('image/png');
-      const imgProps = pdf.getImageProperties(img);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      pdf.addImage(img,'PNG',0,0,pdfWidth,pdfHeight);
-      pdf.save('onboarding.pdf');
+    if (!valid) return;
+
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("test-area").style.display = "block";
+
+    // ✅ Randomly select a different paragraph every time
+    selectedText = paragraphs[Math.floor(Math.random() * paragraphs.length)];
+    renderParagraph();
+
+    const typingBox = document.getElementById("typing-box");
+    typingBox.disabled = false;
+    typingBox.focus();
+    timeLeft = totalDuration;
+    updateTimerDisplay();
+
+    typingBox.addEventListener("input", () => {
+      clearTimeout(inactivityTimer);
+      startMainTimer();
+      inactivityTimer = setTimeout(() => pauseMainTimer(), 1000);
+      renderParagraph();
     });
-
-    document.getElementById('sendPdfBtn').addEventListener('click', async ()=>{
-      const area = document.getElementById('previewArea');
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({unit:'px',format:'a4'});
-      const canvas = await html2canvas(area,{scale:2});
-      const img = canvas.toDataURL('image/png');
-      const imgProps = pdf.getImageProperties(img);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      pdf.addImage(img,'PNG',0,0,pdfWidth,pdfHeight);
-      const pdfBase64 = pdf.output('datauristring'); // data:application/pdf;base64,....
-
-      // Send base64 pdf to Apps Script which will email it to user and admin
-      try{
-        const res = await fetch(APPS_RECEIVE_PDF,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:ONBOARDING.email,pdf:pdfBase64,filename:'onboarding.pdf'})});
-        const j = await res.json();
-        const el = document.getElementById('finalMsg');
-        if(j.ok) el.textContent = 'PDF sent to your email and to admin.'; else el.textContent = j.error || 'Failed to send PDF';
-      }catch(err){ document.getElementById('finalMsg').textContent='Error sending PDF. Check Apps Script URL.' }
-    });
-
-    // Initialize small local state
-    window.ONBOARDING = window.ONBOARDING || {};
-  </script>
-
-  <!-- Sample Apps Script (server-side) - Paste into script.google.com and deploy as Web App (execute as: Me; access: Anyone with link)
-       NOTE: This is a simple example. For production you should store OTPs securely (PropertiesService or Sheet) and clean them after expiry.
-
-  // ---------- BEGIN SAMPLE APPS SCRIPT (server) ----------
-  /**
-   * Sample server-side endpoints (Apps Script) - NOT runnable in browser
-   * Deploy as Web App (doPost) and route by 'action' param or separate doPost handlers.
-   */
-  /*
-  // Code.gs
-  function doPost(e){
-    const data = JSON.parse(e.postData.contents);
-    // route by path or properties
-    if(e.parameter && e.parameter.action=='sendEmailOtp') return sendEmailOtp(data);
-    if(e.parameter && e.parameter.action=='verifyEmailOtp') return verifyEmailOtp(data);
-    if(e.parameter && e.parameter.action=='sendMobileOtp') return sendMobileOtp(data);
-    if(e.parameter && e.parameter.action=='verifyMobileOtp') return verifyMobileOtp(data);
-    if(e.parameter && e.parameter.action=='receivePdf') return receivePdf(data);
-    return ContentService.createTextOutput(JSON.stringify({error:'no_action'})).setMimeType(ContentService.MimeType.JSON);
   }
 
-  function randomOtp(){
-    // 1 to 6 digit random OTP (could be 1-digit up to 6-digit)
-    const length = Math.floor(Math.random()*6)+1; // 1..6
-    let otp='';
-    for(let i=0;i<length;i++) otp += Math.floor(Math.random()*10);
-    return otp;
+  function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    document.getElementById("timer").innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   }
 
-  function sendEmailOtp(data){
-    const email = data.email; const name = data.name || '';
-    const otp = randomOtp();
-    // store OTP in PropertiesService with key email
-    const props = PropertiesService.getScriptProperties();
-    props.setProperty('otp_email_'+email, otp);
-    // send mail
-    MailApp.sendEmail(email, 'Your OTP', 'Hello '+name+'\nYour OTP is: '+otp+'\n(It is valid for a short time)');
-    return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON);
+  function startMainTimer() {
+    if (timerRunning) return;
+    timerRunning = true;
+    activeTimer = setInterval(() => {
+      timeLeft--;
+      updateTimerDisplay();
+      if (timeLeft <= 0) {
+        clearInterval(activeTimer);
+        finishTest();
+      }
+    }, 1000);
   }
 
-  function verifyEmailOtp(data){
-    const email = data.email; const otp = data.otp;
-    const props = PropertiesService.getScriptProperties();
-    const stored = props.getProperty('otp_email_'+email);
-    if(stored && stored===otp){ props.deleteProperty('otp_email_'+email); return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON); }
-    return ContentService.createTextOutput(JSON.stringify({ok:false,error:'invalid_otp'})).setMimeType(ContentService.MimeType.JSON);
+  function pauseMainTimer() {
+    clearInterval(activeTimer);
+    timerRunning = false;
   }
 
-  function sendMobileOtp(data){
-    const mobile = data.mobile; const aadhar = data.aadhar;
-    const otp = randomOtp();
-    const props = PropertiesService.getScriptProperties();
-    props.setProperty('otp_mobile_'+mobile, otp);
-    // If you have an SMS gateway, call it here. Otherwise as fallback, email OTP to the user's email (if available) or admin.
-    // Example: MailApp.sendEmail(adminEmail, 'Mobile OTP for '+mobile, 'OTP: '+otp);
-    return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON);
+  function renderParagraph() {
+    const typedText = document.getElementById("typing-box").value;
+    let html = "";
+    for (let i = 0; i < selectedText.length; i++) {
+      if (i < typedText.length) {
+        const correctChar = selectedText[i];
+        const typedChar = typedText[i];
+        if (typedChar === correctChar) {
+          html += `<span class="correct">${correctChar}</span>`;
+        } else {
+          html += `<span class="incorrect">${correctChar}</span>`;
+        }
+      } else if (i === typedText.length) {
+        html += `<span class="highlight">${selectedText[i]}</span>`;
+      } else {
+        html += `<span>${selectedText[i]}</span>`;
+      }
+    }
+    document.getElementById("paragraph").innerHTML = html;
   }
 
-  function verifyMobileOtp(data){
-    const mobile = data.mobile; const otp = data.otp;
-    const props = PropertiesService.getScriptProperties();
-    const stored = props.getProperty('otp_mobile_'+mobile);
-    if(stored && stored===otp){ props.deleteProperty('otp_mobile_'+mobile); return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON); }
-    return ContentService.createTextOutput(JSON.stringify({ok:false,error:'invalid_otp'})).setMimeType(ContentService.MimeType.JSON);
+function finishTest() {
+  pauseMainTimer();
+
+  const typedText = document.getElementById("typing-box").value.trim();
+  const originalText = selectedText.trim();
+
+  const typedWords = typedText.split(/\s+/).filter(w => w.length > 0);
+  const originalWords = originalText.split(/\s+/).filter(w => w.length > 0);
+
+  let correctWords = 0;
+  const wordCount = Math.min(typedWords.length, originalWords.length);
+
+  for (let i = 0; i < wordCount; i++) {
+    if (typedWords[i] === originalWords[i]) correctWords++;
   }
 
-  function receivePdf(data){
-    // data.pdf is dataURI like data:application/pdf;base64,....
-    const pdfDataUri = data.pdf;
-    const userEmail = data.email;
-    const filename = data.filename || 'onboarding.pdf';
-    // convert to blob
-    const arr = pdfDataUri.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const b64 = arr[1];
-    const blob = Utilities.newBlob(Utilities.base64Decode(b64), mime, filename);
-    // send to user
-    MailApp.sendEmail({to:userEmail,subject:'Your Onboarding PDF',body:'Please find attached',attachments:[blob]});
-    // send to admin
-    const admin = 'ADMIN_EMAIL_HERE';
-    MailApp.sendEmail({to:admin,subject:'New Onboarding Submitted',body:'See attached',attachments:[blob]});
-    return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON);
-  }
-  */
-  // ---------- END SAMPLE APPS SCRIPT ----------
-  -->
+  const totalWords = typedWords.length;
+  const accuracy = totalWords > 0 ? Math.round((correctWords / totalWords) * 100) : 0;
 
+  const timeTaken = totalDuration - timeLeft;
+  const wpm = timeTaken > 0 ? Math.round((totalWords / timeTaken) * 60) : 0;
+
+  document.getElementById("typing-box").disabled = true;
+  document.getElementById("test-area").style.display = "none";
+
+document.getElementById("results").innerHTML = `
+  <h3>Test Result</h3>
+  <p><strong>Name:</strong> ${document.getElementById("name").value}</p>
+  <p><strong>Email:</strong> ${document.getElementById("email").value}</p>
+  <p><strong>WPM:</strong> ${wpm}</p>
+  <p><strong>Accuracy:</strong> ${accuracy}%</p>
+  <p><strong>Total Words Typed:</strong> ${totalWords}</p>
+  <p><strong>Correct Words:</strong> ${correctWords}</p>
+  <div style="margin-top:20px;">
+    <button 
+      id="finalSubmitBtn"
+      type="button"
+      onclick="submitToSheet()" 
+      style="background: linear-gradient(to right, #2dd4bf, #3b82f6);
+           color: white;
+           padding: 15px 40px;
+           font-size: 18px;
+           font-weight: bold;
+           border: none;
+           border-radius: 50px;
+           cursor: pointer;">
+      Please! Submit Your Result
+    </button>
+  </div>
+`;
+
+  document.getElementById("results").style.display = "block";
+  document.getElementById("finalSubmitBtn").style.display = "block";
+
+  window.resultData = {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    wpm,
+    accuracy,
+    totalWords,
+    correctWords
+  };
+}
+function submitToSheet() {
+  const formBaseURL = "https://docs.google.com/forms/d/e/1FAIpQLSdrV_MCvdC0-v-EY9QLUAcUh15cAX-0Cbc8pbmyqEcSswuwFQ/formResponse";
+
+  const params = new URLSearchParams({
+    "entry.1239245755": window.resultData.name,
+    "entry.1202560839": window.resultData.email,
+    "entry.1945685852": window.resultData.wpm,
+    "entry.710656876": window.resultData.accuracy,
+    "entry.1233596875": window.resultData.totalWords,
+    "entry.1193619231": window.resultData.correctWords
+  });
+
+  // Data submit (background me)
+  fetch(`${formBaseURL}?${params.toString()}`, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  });
+
+  // Success popup create
+  const popup = document.createElement("div");
+  popup.innerText = "✅ Successfully Submitted!";
+  popup.style.position = "fixed";
+  popup.style.top = "50%";
+  popup.style.left = "50%";
+  popup.style.transform = "translate(-50%, -50%)";
+  popup.style.background = "linear-gradient(to right, #2dd4bf, #3b82f6)";
+  popup.style.color = "white";
+  popup.style.padding = "20px 30px";
+  popup.style.fontSize = "20px";
+  popup.style.fontWeight = "bold";
+  popup.style.borderRadius = "10px";
+  popup.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+  popup.style.zIndex = "9999";
+  popup.style.opacity = "1";
+  popup.style.transition = "opacity 1s ease";
+
+  document.body.appendChild(popup);
+
+  // 2 sec me fade out
+  setTimeout(() => {
+    popup.style.opacity = "0";
+  }, 2000);
+
+  // 3 sec baad remove popup aur login page dikhao
+  setTimeout(() => {
+    popup.remove();
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'flex';
+  }, 3000);
+
+  // 5 sec baad refresh
+  setTimeout(() => {
+    location.reload();
+  }, 1000);
+}
+
+</script>
 </body>
 </html>
