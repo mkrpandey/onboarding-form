@@ -7,130 +7,15 @@
   <link rel="icon" type="image/png" href="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #e6f4ff;
-      color: #333;
-      padding-top: 140px;
-    }
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 999;
-      padding: 20px 40px;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .header img {
-      height: 100px;
-      filter: brightness(1.2) contrast(1.3);
-    }
-    .header h2 {
-      color: #003366;
-      font-weight: 600;
-      font-size: 36px;
-    }
-    .container, #test-area, #results {
-      display: none;
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .login-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 30px;
-      min-height: 80vh;
-    }
-    .left {
-      flex: 0 0 40%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: auto;
-    }
-    .right {
-      flex: 0 0 300px;
-      background: #fff;
-      margin-left: 30px;
-      padding: 30px 25px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    .right h3 { 
-      text-align: center; margin-bottom: 15px; font-weight: 600; 
-    }
-    input[type="text"], input[type="email"] {
-      width: 100%;
-      padding: 12px 15px;
-      margin: 8px 0;
-      border: 1px solid #ddd;
-      border-radius: 25px;
-      outline: none;
-      font-size: 16px;
-    }
-    .error {
-      color: red;
-      font-size: 14px;
-      margin-top: 5px;
-      display: none;
-      text-align: center;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 25px;
-      background: linear-gradient(to right, #36d1dc, #5b86e5);
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: opacity 0.3s;
-    }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    #paragraph {
-      white-space: pre-wrap;
-      background: #f1f1f1;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      line-height: 1.6;
-      font-size: 16px;
-    }
-    #typing-box {
-      width: 100%;
-      height: 200px;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
-    .timer {
-      text-align: right;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .highlight {
-      background-color: yellow;
-    }
-    .correct {
-      color: green;
-    }
-    .incorrect {
-      color: red;
-    }
+    body { font-family: 'Poppins', sans-serif; background: #e6f4ff; padding-top: 140px; }
+    .header { position: fixed; top: 0; left: 0; right: 0; background: #fff; padding: 20px 40px; display: flex; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .header img { height: 100px; }
+    .header h2 { color: #003366; font-size: 30px; }
+    .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
+    .right { background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 25px; }
+    button { width: 100%; padding: 12px; border: none; border-radius: 25px; background: linear-gradient(to right, #36d1dc, #5b86e5); color: #fff; font-size: 16px; cursor: pointer; }
+    .error { color: red; font-size: 14px; display: none; text-align: center; }
   </style>
 </head>
 <body>
@@ -139,15 +24,8 @@
     <h2>Air Flow Pvt. Ltd. Onboarding</h2>
   </div>
 
-  <!-- Login Section -->
-  <div class="login-container" id="loginPage">
-    <div class="left">
-      <img 
-        src="https://static.tildacdn.com/tild6139-3137-4563-a566-316439303538/Frame_17.png" 
-        alt="Illustration"
-        style="width: 100%; height: auto; border-radius: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
-      >
-    </div>
+  <!-- ✅ Login -->
+  <div class="login-container">
     <div class="right">
       <h3>👤 Login</h3>
       <input type="text" id="name" placeholder="Your Name" required />
@@ -155,30 +33,73 @@
       <input type="email" id="email" placeholder="Your Email" required />
       <div class="error" id="emailError">Please enter a valid email.</div>
       
-      <button onclick="alert('Send OTP functionality not implemented')">Send OTP</button>
+      <button onclick="sendOTP(this)">Send OTP</button>
       
       <div id="otpSection" style="display: none; margin-top: 15px;">
         <input type="text" id="otp" placeholder="Enter OTP" maxlength="6" />
         <div class="error" id="otpError">Invalid OTP. Please try again.</div>
-        <button onclick="alert('Verify OTP & Start not implemented')">Verify OTP & Start</button>
+        <button onclick="verifyOTP(this)">Verify OTP</button>
       </div>
     </div>
   </div>
 
-  <!-- Typing Test Area (initially hidden) -->
-  <div class="container" id="test-area">
-    <div class="timer" id="timer">01:00</div>
-    <div id="paragraph">Your typing test will appear here.</div>
-    <textarea id="typing-box" disabled placeholder="Start typing here..."></textarea>
-  </div>
+<script>
+  let generatedOTP = "";
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbwMaO6r3pEF5Sf_IHpXoR5PPnsiHQoYlgNk6oeC_q6jFMc7PQTMoemyx5-Ln2NyKS4/exec";  // ⬅️ यहां अपना GAS URL डालो
 
-  <!-- Results Section -->
-  <div class="container" id="results">
-    <h3>Results</h3>
-    <p>WPM: <span id="wpm">0</span></p>
-    <p>Accuracy: <span id="accuracy">0%</span></p>
-    <p>Total Words: <span id="totalWords">0</span></p>
-    <p>Correct Words: <span id="correctWords">0</span></p>
-  </div>
+  function validateEmail(email) {
+    return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+  }
+
+ function sendOTP(btn) {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+
+  if (name === "") { document.getElementById("nameError").style.display = "block"; return; }
+  else document.getElementById("nameError").style.display = "none";
+
+  if (!validateEmail(email)) { document.getElementById("emailError").style.display = "block"; return; }
+  else document.getElementById("emailError").style.display = "none";
+
+  // Send OTP request to Apps Script
+  fetch(GAS_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "sendOTP", email: email }),
+    headers: { "Content-Type": "application/json" }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success) {
+      alert("✅ OTP sent successfully to your email!");
+      document.getElementById("otpSection").style.display = "block";
+      btn.innerText = "Resend OTP";
+    } else {
+      alert("❌ Failed to send OTP: " + data.message);
+    }
+  });
+}
+
+function verifyOTP(btn) {
+  const email = document.getElementById("email").value.trim();
+  const enteredOTP = document.getElementById("otp").value.trim();
+
+  fetch(GAS_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "verifyOTP", email: email, otp: enteredOTP }),
+    headers: { "Content-Type": "application/json" }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.verified) {
+      document.getElementById("otpError").style.display = "none";
+      btn.innerText = "Next ➡️";
+      btn.onclick = () => { window.location.href = "02aadhar.html"; };
+      alert("✅ OTP Verified Successfully!");
+    } else {
+      document.getElementById("otpError").style.display = "block";
+    }
+  });
+}
+</script>
 </body>
 </html>
