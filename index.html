@@ -1,4 +1,4 @@
-<!doctype html>
+<!Doctype html>
 <html lang="hi">
 <head>
   <meta charset="utf-8">
@@ -211,11 +211,15 @@
        See the sample Apps Script code included at the bottom of this file (comment).
     -----------------------------*/
 
-    const APPS_SEND_EMAIL_OTP = 'REPLACE_WITH_YOUR_APPS_SCRIPT_SEND_EMAIL_OTP_URL';
-    const APPS_VERIFY_EMAIL_OTP = 'REPLACE_WITH_YOUR_APPS_SCRIPT_VERIFY_EMAIL_OTP_URL';
-    const APPS_SEND_MOBILE_OTP = 'REPLACE_WITH_YOUR_APPS_SCRIPT_SEND_MOBILE_OTP_URL';
-    const APPS_VERIFY_MOBILE_OTP = 'REPLACE_WITH_YOUR_APPS_SCRIPT_VERIFY_MOBILE_OTP_URL';
-    const APPS_RECEIVE_PDF = 'REPLACE_WITH_YOUR_APPS_SCRIPT_RECEIVE_PDF_URL';
+   // Base URL of your Apps Script
+   const BASE_URL = 'https://script.google.com/macros/s/AKfycbwZqyAQYYANqZ22t456-bvtGlCJJ6NYLTsVUKaw0w/dev';
+   // Endpoints
+   const APPS_SEND_EMAIL_OTP = BASE_URL + '?action=send-otp';
+   const APPS_VERIFY_EMAIL_OTP = BASE_URL + '?action=verify-otp';
+    
+   const APPS_SEND_MOBILE_OTP = 'REPLACE_WITH_YOUR_APPS_SCRIPT_SEND_MOBILE_OTP_URL';
+   const APPS_VERIFY_MOBILE_OTP = 'REPLACE_WITH_YOUR_APPS_SCRIPT_VERIFY_MOBILE_OTP_URL';
+   const APPS_RECEIVE_PDF = 'REPLACE_WITH_YOUR_APPS_SCRIPT_RECEIVE_PDF_URL';
 
     // Simple page router
     function showPage(n){
@@ -227,46 +231,55 @@
     function nextPage(curr){ showPage(curr+1); }
 
     // Page1: Email OTP
-    document.getElementById('sendEmailOtpBtn').addEventListener('click', async (e)=>{
-      e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const mobile = document.getElementById('mobile').value.trim();
-      const msgEl = document.getElementById('form1msg');
-      msgEl.textContent='';
-      if(!name||!email) { msgEl.textContent='Name and Email required'; return; }
+document.getElementById('sendEmailOtpBtn').addEventListener('click', async (e)=>{
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const mobile = document.getElementById('mobile').value.trim();
+  const msgEl = document.getElementById('form1msg');
+  msgEl.textContent='';
+  if(!name||!email) { msgEl.textContent='Name and Email required'; return; }
 
-      // POST to Apps Script to SEND OTP
-      try{
-        const res = await fetch(APPS_SEND_EMAIL_OTP,{
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({name,email,mobile})
-        });
-        const j = await res.json();
-        if(j.ok){ document.getElementById('verifyEmailOtpBtn').disabled=false; msgEl.textContent='OTP sent to email.'; }
-        else msgEl.textContent = j.error || 'Failed to send OTP';
-      }catch(err){ msgEl.textContent='Error sending OTP. Check Apps Script URL.' }
+  // send OTP using URL params (Apps Script expects e.parameter)
+  try{
+    const res = await fetch(`${APPS_SEND_EMAIL_OTP}&email=${encodeURIComponent(email)}`, {
+      method:'POST'
     });
+    const j = await res.json();
+    if(j.ok){ 
+      document.getElementById('verifyEmailOtpBtn').disabled=false; 
+      msgEl.textContent='OTP sent to email.'; 
+    } else msgEl.textContent = j.message || 'Failed to send OTP';
+  }catch(err){ msgEl.textContent='Error sending OTP. Check Apps Script URL.' }
+});
 
-    document.getElementById('verifyEmailOtpBtn').addEventListener('click', async ()=>{
-      const email = document.getElementById('email').value.trim();
-      const otp = document.getElementById('emailOtpInput').value.trim();
-      const msgEl = document.getElementById('form1msg'); msgEl.textContent='';
-      if(!otp){ msgEl.textContent='Enter OTP'; return; }
-      try{
-        const res = await fetch(APPS_VERIFY_EMAIL_OTP,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,otp})});
-        const j = await res.json();
-        if(j.ok){ msgEl.classList.remove('text-danger'); msgEl.classList.add('text-success'); msgEl.textContent='Email verified!';
-          // store login email in local state
-          window.ONBOARDING = window.ONBOARDING || {};
-          ONBOARDING.name = document.getElementById('name').value.trim();
-          ONBOARDING.email = email; ONBOARDING.mobile = document.getElementById('mobile').value.trim();
-          setTimeout(()=>nextPage(2),700);
-        } else { msgEl.textContent = j.error || 'Invalid OTP'; }
-      }catch(err){ msgEl.textContent='Error verifying OTP'; }
+document.getElementById('verifyEmailOtpBtn').addEventListener('click', async ()=>{
+  const email = document.getElementById('email').value.trim();
+  const otp = document.getElementById('emailOtpInput').value.trim();
+  const msgEl = document.getElementById('form1msg'); msgEl.textContent='';
+  if(!otp){ msgEl.textContent='Enter OTP'; return; }
+
+  // verify OTP using URL params
+  try{
+    const res = await fetch(`${APPS_VERIFY_EMAIL_OTP}&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {
+      method:'POST'
     });
+    const j = await res.json();
+    if(j.ok){ 
+      msgEl.classList.remove('text-danger'); 
+      msgEl.classList.add('text-success'); 
+      msgEl.textContent='Email verified!';
+      // store login email in local state
+      window.ONBOARDING = window.ONBOARDING || {};
+      ONBOARDING.name = document.getElementById('name').value.trim();
+      ONBOARDING.email = email; 
+      ONBOARDING.mobile = document.getElementById('mobile').value.trim();
+      setTimeout(()=>nextPage(2),700);
+    } else { msgEl.textContent = j.message || 'Invalid OTP'; }
+  }catch(err){ msgEl.textContent='Error verifying OTP'; }
+});
 
-    // Page2: Aadhar & mobile otp
+// Page2: Aadhar & mobile otp
     document.getElementById('sendMobileOtpBtn').addEventListener('click', async (e)=>{
       e.preventDefault();
       const mobile = document.getElementById('aadharMobile').value.trim();
