@@ -1,54 +1,64 @@
-<!Doctype html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Employee Onboarding — Single File (Responsive)</title>
-  <!-- Bootstrap 5 -->
+  <title>Employee Onboarding — Responsive</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- jsPDF, html2canvas for PDF generation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
-    <body class="bg-light">
-  <div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="m-0">Air Flow Pvt. Ltd. Employee Onboarding</h4>
-          <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" 
-               alt="Air Flow Logo" id="logo" style="max-width:100px;">
-        </div>
-        <!-- आपका form यहां होगा -->
+    body {
+      background: #f4f6fb;
+    }
+    .onboard-card {
+      max-width: 500px;
+      width: 100%;
+    }
+    .page { display: none; }
+    .page.active { display: block; }
+    .small-note { font-size: 0.85rem; color: #666; }
+    #sigCanvas {
+      width: 100%;
+      height: 150px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-sm onboard-card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="m-0">Air Flow Pvt. Ltd.</h4>
+        <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" alt="Logo" style="max-width:90px;">
       </div>
-    </div>
-  </div>
-</body>
-        <!-- Page 1 : Login (Name, Mobile, Email + Send OTP via Apps Script) -->
-        <div id="page1" class="page active">
-          <h5>1 — Login / Email OTP</h5>
-          <p class="small-note">Email par OTP Apps Script ke through bhejna hai. Apps Script web app URLs ko placeholders mein daalein (see JS comments).</p>
-          <form id="form1" onsubmit="return false;">
-            <div class="mb-3">
-              <label class="form-label">Full Name</label>
-              <input id="name" class="form-control" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Mobile Number</label>
-              <input id="mobile" class="form-control" pattern="[0-9]{10}" maxlength="10" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input id="email" type="email" class="form-control" required>
-            </div>
-            <div class="d-flex gap-2">
-              <button id="sendEmailOtpBtn" class="btn btn-primary">Send Email OTP</button>
-              <button id="verifyEmailOtpBtn" class="btn btn-success" disabled>Verify OTP</button>
-              <input id="emailOtpInput" class="form-control" placeholder="Enter OTP" style="max-width:200px">
-            </div>
-            <div id="form1msg" class="mt-2 small-note text-danger"></div>
-          </form>
-        </div>
+
+      <!-- Page 1 : Login -->
+      <div id="page1" class="page active">
+        <h5>1 — Login / Email OTP</h5>
+        <form id="form1" onsubmit="return false;">
+          <div class="mb-2">
+            <label class="form-label">Full Name</label>
+            <input id="name" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Mobile Number</label>
+            <input id="mobile" class="form-control" pattern="[0-9]{10}" maxlength="10" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Email</label>
+            <input id="email" type="email" class="form-control" required>
+          </div>
+          <div class="d-flex gap-2 mb-2">
+            <button id="sendEmailOtpBtn" class="btn btn-primary btn-sm">Send Email OTP</button>
+            <input id="emailOtpInput" class="form-control form-control-sm" placeholder="Enter OTP" style="max-width:150px">
+            <button id="verifyEmailOtpBtn" class="btn btn-success btn-sm" disabled>Verify OTP</button>
+          </div>
+          <div id="form1msg" class="mt-1 small-note text-danger"></div>
+        </form>
+      </div>
+
 
         <!-- Page 2 : Aadhar & Mobile OTP -->
         <div id="page2" class="page">
