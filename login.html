@@ -1,1 +1,57 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login Verification Page</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+    label { display: block; margin-top: 15px; }
+    input { width: 100%; padding: 8px; margin-top: 5px; }
+    button { margin-top: 20px; padding: 10px 15px; }
+    .nav-buttons { display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+  <h2>Login Verification</h2>
+  <form id="loginForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" />
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" />
+
+    <div class="nav-buttons">
+      <!-- No back button on first page -->
+      <div></div>
+      <button type="button" id="nextBtn">Next</button>
+    </div>
+  </form>
+
+  <script>
+    const formId = 'loginForm';
+
+    // Save inputs to localStorage on input
+    document.querySelectorAll('#loginForm input').forEach(input => {
+      input.addEventListener('input', () => {
+        localStorage.setItem(input.id, input.value);
+      });
+    });
+
+    // Load inputs from localStorage on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#loginForm input').forEach(input => {
+        if(localStorage.getItem(input.id)) {
+          input.value = localStorage.getItem(input.id);
+        }
+      });
+    });
+
+    // Next button click
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      // (Optional) Validation before next page navigation can go here
+      window.location.href = 'aadhar.html';
+    });
+  </script>
+</body>
+</html>
