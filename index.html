@@ -10,31 +10,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    body{background:#f4f6fb;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans',"Helvetica Neue",Arial}
-    .page{display:none;padding:20px}
-    .page.active{display:block}
-    .logo{max-width:140px}
-    .small-note{font-size:0.9rem;color:#555}
-    /* responsive tweaks */
-    @media(min-width:992px){
-      .card-centered{max-width:900px;margin:30px auto}
-        }
-        /* signature canvas border */
-    #sigCanvas {
-      border:1px dashed #aaa;
-      border-radius:6px;
-      width:100%;
-      height:200px;
-    }
-    </style>
-    </head>
-    <body>
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="m-0">Air Flow Pvt. Ltd. Employee Onboarding</h4>
-        <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" 
-             alt="Air Flow Logo" id="logo" style="max-width:150px;">
+    <body class="bg-light">
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="m-0">Air Flow Pvt. Ltd. Employee Onboarding</h4>
+          <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" 
+               alt="Air Flow Logo" id="logo" style="max-width:100px;">
+        </div>
+        <!-- आपका form यहां होगा -->
       </div>
-
+    </div>
+  </div>
+</body>
         <!-- Page 1 : Login (Name, Mobile, Email + Send OTP via Apps Script) -->
         <div id="page1" class="page active">
           <h5>1 — Login / Email OTP</h5>
