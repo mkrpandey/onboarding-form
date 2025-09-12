@@ -129,74 +129,80 @@
     </div>
   </div>
 
-  <script>
-    let generatedOTP = "";
+<script>
+let generatedOTP = "";
 
-       function isValidEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-      }
-    function sendOTP() {
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const nameError = document.getElementById("nameError");
-      const emailError = document.getElementById("emailError");
+// Email validation function
+function isValidEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
 
-      nameError.style.display = "none";
-      emailError.style.display = "none";
+function sendOTP() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
 
-      if (!name) {
-        nameError.style.display = "block";
-        return;
-      }
-      if (!isValidEmail(email)) {
-        emailError.style.display = "block";
-        return;
-      }
+  // Hide previous errors
+  nameError.style.display = "none";
+  emailError.style.display = "none";
 
-      generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+  if (!name) {
+    nameError.style.display = "block";
+    return;
+  }
 
-      const scriptURL = "https://script.google.com/macros/s/AKfycbxa7pmSZE962hcbPr9ocnW5-SsL48CFBlatIPg0HGiqGCxugZgZInLherg5NnDmrdM/exec";
-      
-      fetch(scriptURL + `?email=${encodeURIComponent(email)}&otp=${generatedOTP}`)
-        .then(response => response.text())
-        .then(data => {
-          console.log(data);
-          alert("OTP sent successfully to " + email);
-          document.getElementById("otpSection").style.display = "block";
-          document.getElementById("sendOTPBtn").disabled = true;
-        })
-        .catch(err => {
-          console.error('Error!', err.message);
-          alert("Failed to send OTP. Please try again.");
-        });
+  if (!isValidEmail(email)) {
+    emailError.style.display = "block";
+    return;
+  }
+
+  generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxa7pmSZE962hcbPr9ocnW5-SsL48CFBlatIPg0HGiqGCxugZgZInLherg5NnDmrdM/exec";
+
+  fetch(scriptURL + `?email=${encodeURIComponent(email)}&otp=${generatedOTP}`)
+    .then(response => response.text())
+    .then(data => {
+      console.log(data);
+      alert("OTP sent successfully to " + email);
+      document.getElementById("otpSection").style.display = "block";
+      document.getElementById("sendOTPBtn").disabled = true;
+    })
+    .catch(err => {
+      console.error('Error!', err.message);
+      alert("Failed to send OTP. Please try again.");
+    });
+}
+
+function verifyOTP() {
+  const otpInput = document.getElementById("otp").value.trim();
+  const otpError = document.getElementById("otpError");
+
+  otpError.style.display = "none";
+
+  if (otpInput === generatedOTP) {
+    let existingMsg = document.getElementById("otpSuccessMsg");
+    if (!existingMsg) {
+      const successMsg = document.createElement("div");
+      successMsg.id = "otpSuccessMsg";
+      successMsg.style.color = "green";
+      successMsg.style.textAlign = "center";
+      successMsg.style.marginTop = "10px";
+      successMsg.textContent = "Your OTP verification is successful ✅";
+      document.getElementById("otpSection").appendChild(successMsg);
     }
 
-    function verifyOTP() {
-      const otpInput = document.getElementById("otp").value.trim();
-      const otpError = document.getElementById("otpError");
-
-      otpError.style.display = "none";
-
-      if (otpInput === generatedOTP) {
-        const successMsg = document.createElement("div");
-        successMsg.style.color = "green";
-        successMsg.style.textAlign = "center";
-        successMsg.style.marginTop = "10px";
-        successMsg.textContent = "Your OTP verification is successful ✅";
-
-        document.getElementById("otpSection").appendChild(successMsg);
-
-        const verifyButton = document.getElementById("verifyBtn");
-        verifyButton.textContent = "Next";
-        verifyButton.onclick = function() {
-          window.location.href = "02aadhar.html";
-        };
-
-      } else {
-        otpError.style.display = "block";
-      }
-    }
-  </script>
+    const verifyButton = document.getElementById("verifyBtn");
+    verifyButton.textContent = "Next";
+    verifyButton.onclick = function() {
+      window.location.href = "02aadhar.html";
+    };
+  } else {
+    otpError.style.display = "block";
+  }
+}
+</script>
 </body>
 </html>
