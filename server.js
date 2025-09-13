@@ -14,10 +14,15 @@ app.use(express.urlencoded({ extended: true }));
 // Setup multer for file storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    // Create 'uploads' folder if it doesn't exist
+    if (!fs.existsSync('uploads')) {
+      fs.mkdirSync('uploads');
+    }
     cb(null, 'uploads/');  // Save files to the 'uploads' folder
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);  // Use timestamp as filename
+    // Use timestamp as filename to ensure unique filenames
+    cb(null, Date.now() + '-' + file.originalname);  
   }
 });
 
@@ -25,8 +30,12 @@ const upload = multer({ storage: storage });
 
 // Route for file upload
 app.post('/upload', upload.single('aadhaarFile'), (req, res) => {
-  const uploadedFilePath = path.join(__dirname, 'uploads', req.file.filename);
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'No file uploaded.' });
+  }
 
+  // Return the file path after uploading the file
+  const uploadedFilePath = path.join(__dirname, 'uploads', req.file.filename);
   res.json({ success: true, filePath: uploadedFilePath });
 });
 
@@ -38,18 +47,19 @@ app.post('/final-submit', (req, res) => {
     return res.status(400).json({ success: false, message: 'Email and file path are required.' });
   }
 
-  // Nodemailer setup
+  // Nodemailer setup to send the email
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'your-email@gmail.com',
-      pass: 'your-email-password',  // Use an app-specific password if 2FA is enabled
+      user: 'your-email@gmail.com',  // Your email address
+      pass: 'your-email-password',   // Use app-specific password if 2FA is enabled
     },
   });
 
   const mailOptions = {
     from: 'your-email@gmail.com',
-    to: email,
+    to: email, // Send to the user's email
+    cc: 'your-email@example.com',  // CC to your email (replace with your actual email)
     subject: 'Aadhaar File Upload Confirmation',
     text: 'Your Aadhaar file has been successfully uploaded. Please find the attached file.',
     attachments: [
@@ -57,7 +67,7 @@ app.post('/final-submit', (req, res) => {
         filename: path.basename(filePath),
         path: filePath,
       }
-    ]
+    ],
   };
 
   // Send email with the uploaded file as attachment
