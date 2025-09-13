@@ -88,9 +88,11 @@
     }
 
     #instructionImage {
-      width: 100%;
+      width: 300px;
       border-radius: 10px;
       margin-top: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
     }
 
     .success {
@@ -105,6 +107,46 @@
       font-size: 16px;
       margin-top: 10px;
       text-align: center;
+    }
+
+    /* Modal Styles */
+    #imageModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width:100%;
+      height:100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #imageModal .modal-content {
+      position: relative;
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      max-width: 90%;
+      max-height: 90%;
+      text-align: center;
+    }
+
+    #imageModal .modal-content img {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 8px;
+    }
+
+    #imageModal .close-btn {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      font-size: 24px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #333;
     }
   </style>
 </head>
@@ -130,7 +172,7 @@
       <!-- Instructions Section -->
       <div id="instructionSection">
         <h4>Step 1: Aadhaar Verification Instructions</h4>
-        <img id="instructionImage" src="https://i.imgur.com/Gd6uhz5.jpeg" alt="Instructions Image" />
+        <img id="instructionImage" src="instruction.jpg" alt="Instructions Image" onclick="openModal()" />
         <button id="verifyHereBtn" onclick="openUIDAI()">Verify Here</button>
       </div>
 
@@ -146,6 +188,14 @@
       <div id="nextButtons">
         <button onclick="window.location.href='03candidate.html'">Next</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal for Full Image -->
+  <div id="imageModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <img src="instruction.jpg" alt="Full Instruction Image" />
     </div>
   </div>
 
@@ -177,18 +227,13 @@
         return;
       }
 
-      // Save Aadhaar to session for later verification
       sessionStorage.setItem("aadhaarNumber", aadhaar);
-
-      // Show the instruction section
       document.getElementById("instructionSection").style.display = "block";
     }
 
     function openUIDAI() {
       window.open("https://tathya.uidai.gov.in/access/login?role=resident", "_blank");
       document.getElementById("verifyHereBtn").disabled = true;
-
-      // Show upload section now
       document.getElementById("uploadSection").style.display = "block";
     }
 
@@ -207,7 +252,6 @@
 
       const aadhaarFromUser = sessionStorage.getItem("aadhaarNumber");
 
-      // Extract 12 digit number from file name (assume only Aadhaar number is there)
       const filename = file.name.toLowerCase();
       const match = filename.match(/(\d{12})/);
 
@@ -226,6 +270,14 @@
         resultDiv.className = "fail";
         resultDiv.innerText = "Filename must contain the 12-digit Aadhaar number.";
       }
+    }
+
+    function openModal() {
+      document.getElementById("imageModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("imageModal").style.display = "none";
     }
   </script>
 </body>
