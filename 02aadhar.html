@@ -43,23 +43,15 @@
       padding: 30px;
       min-height: 80vh;
     }
-    .left {
-      flex: 0 0 40%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: auto;
-    } 
     .right {
-      flex: 0 0 300px;
       background: #fff;
-      margin-left: 30px;
       padding: 30px 25px;
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 400px;
     }
     .right h3 { text-align: center; margin-bottom: 15px; font-weight: 600; }
-    input[type="text"], input[type="email"] {
+    input[type="text"], input[type="email"], input[type="tel"] {
       width: 100%;
       padding: 12px 15px;
       margin: 8px 0;
@@ -87,7 +79,6 @@
       transition: opacity 0.3s;
     }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
-
   </style>
 </head>
 <body>
@@ -98,10 +89,18 @@
 
   <div class="login-container" id="aadhaarPage">
     <div class="right">
-      <h3>🔒 Aadhaar Verification</h3>
+      <h3>Aadhaar & Mobile Number Verification</h3>
+      <!-- Aadhaar Number Section -->
       <input type="text" id="aadhaarNumber" placeholder="Enter Your Aadhaar Number" required />
       <div class="error" id="aadhaarError">Please enter a valid Aadhaar number.</div>
+
+      <!-- Mobile Number Section -->
+      <input type="tel" id="mobileNumber" placeholder="Enter Your Mobile Number" required />
+      <div class="error" id="mobileError">Please enter a valid mobile number connected with Aadhaar.</div>
+
       <button id="sendOTPBtn" onclick="sendOTP()">Send OTP</button>
+      
+      <!-- OTP Verification Section -->
       <div id="otpSection" style="display: none; margin-top: 15px;">
         <input type="text" id="otp" placeholder="Enter OTP" maxlength="6" />
         <div class="error" id="otpError">Invalid OTP. Please try again.</div>
@@ -113,21 +112,29 @@
 <script>
 let generatedOTP = "";
 
-// Aadhaar number validation function (basic check for 12 digits)
+// Aadhaar and mobile number validation functions
 function isValidAadhaar(aadhaar) {
   const re = /^\d{12}$/;
   return re.test(aadhaar);
 }
 
+function isValidMobile(mobile) {
+  const re = /^[6-9]\d{9}$/;  // Only mobile numbers starting with 6, 7, 8, or 9 are valid
+  return re.test(mobile);
+}
+
 function sendOTP() {
   const aadhaar = document.getElementById("aadhaarNumber").value.trim();
+  const mobile = document.getElementById("mobileNumber").value.trim();
   
   const aadhaarError = document.getElementById("aadhaarError");
+  const mobileError = document.getElementById("mobileError");
   
   // Hide previous error messages
   aadhaarError.style.display = "none";
+  mobileError.style.display = "none";
 
-  // Check if Aadhaar is filled in
+  // Check if Aadhaar and Mobile Number are filled in
   if (!aadhaar) {
     aadhaarError.style.display = "block";  // Show error for Aadhaar
     return;  // Stop the function if Aadhaar is empty
@@ -136,20 +143,31 @@ function sendOTP() {
   if (!isValidAadhaar(aadhaar)) {
     aadhaarError.textContent = "Please enter a valid 12-digit Aadhaar number.";
     aadhaarError.style.display = "block";  // Show error for invalid Aadhaar
-    return;  // Stop the function if Aadhaar is invalid
+    return;
+  }
+
+  if (!mobile) {
+    mobileError.style.display = "block";  // Show error for Mobile
+    return;
+  }
+
+  if (!isValidMobile(mobile)) {
+    mobileError.textContent = "Please enter a valid mobile number connected with Aadhaar.";
+    mobileError.style.display = "block";  // Show error for invalid mobile
+    return;
   }
 
   // Generate OTP
   generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
   console.log("Generated OTP: ", generatedOTP);  // Log the generated OTP
 
-  // Send OTP request to Google Apps Script
+  // Send OTP request to Google Apps Script (send OTP to the mobile number)
   const scriptURL = "https://script.google.com/macros/s/AKfycbxa7pmSZE962hcbPr9ocnW5-SsL48CFBlatIPg0HGiqGCxugZgZInLherg5NnDmrdM/exec";
-  fetch(scriptURL + `?action=sendOTP&email=${encodeURIComponent(aadhaar)}&otp=${generatedOTP}`)
+  fetch(scriptURL + `?action=sendOTP&mobile=${encodeURIComponent(mobile)}&otp=${generatedOTP}`)
     .then(response => response.text())
     .then(data => {
       console.log(data);
-      alert("OTP sent successfully to " + aadhaar);
+      alert("OTP sent successfully to " + mobile);
       document.getElementById("otpSection").style.display = "block";
     })
     .catch(err => {
@@ -192,7 +210,7 @@ function verifyOTP() {
         const verifyButton = document.getElementById("verifyBtn");
         verifyButton.textContent = "Next";
         verifyButton.onclick = function() {
-          window.location.href = "nextPage.html"; // Redirect to next page (update as needed)
+          window.location.href = "03candidate.html"; // Redirect to next page (update as needed)
         };
       } else {
         otpError.style.display = "block";
