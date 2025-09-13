@@ -121,15 +121,21 @@
       margin: 0 auto;
       display: block;
     }
-    #instructionImage {
-      width: 50%;
-      margin: 0 auto;
-      display: block;
+    #instructionImageWrapper {
+      background-color: black;
+      padding: 10px;
+      display: inline-block;
+      border-radius: 10px;
       cursor: pointer;
       transition: transform 0.3s ease;
     }
-    #instructionImage:hover {
+    #instructionImageWrapper:hover {
       transform: scale(1.05);
+    }
+    #instructionImage {
+      width: 100%;
+      height: auto;
+      display: block;
     }
   </style>
 </head>
@@ -154,7 +160,9 @@
       <!-- Instructions Section -->
       <div id="instructionSection" style="display: none;">
         <h4>Step 1: Aadhaar Verification Instructions</h4>
-        <img id="instructionImage" src="instruction.jpg" alt="Instructions Image" onclick="openModal()" />
+        <div id="instructionImageWrapper" onclick="openModal()">
+          <img id="instructionImage" src="instruction.jpg" alt="Instructions Image" />
+        </div>
         <button id="verifyHereBtn" onclick="openUIDAI()">Verify Here</button>
       </div>
 
@@ -263,7 +271,9 @@ function verifyAadhaarImage() {
     }
   }).then(({ data: { text } }) => {
     // Check if Aadhaar number is found in the image
-    if (text.includes(sessionStorage.getItem("aadhaarNumber"))) {
+    const extractedAadhaar = text.replace(/\D/g, ''); // Clean any non-digit characters
+
+    if (extractedAadhaar === sessionStorage.getItem("aadhaarNumber")) {
       resultDiv.className = "success";
       resultDiv.innerText = "Aadhaar image verified successfully!";
       document.getElementById("uploadSection").style.display = "none";
