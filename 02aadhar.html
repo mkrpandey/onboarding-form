@@ -39,7 +39,7 @@
     .login-container {
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       padding: 30px;
       min-height: 80vh;
     }
@@ -48,10 +48,11 @@
       padding: 30px 25px;
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      width: 400px;
+      width: 100%;
+      max-width: 500px;
     }
     .right h3 { text-align: center; margin-bottom: 15px; font-weight: 600; }
-    input[type="text"], input[type="email"], input[type="tel"] {
+    input[type="text"], input[type="tel"], input[type="file"] {
       width: 100%;
       padding: 12px 15px;
       margin: 8px 0;
@@ -79,6 +80,32 @@
       transition: opacity 0.3s;
     }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #instructionSection, #uploadSection, #nextButtons {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #instructionImage {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: green;
+      font-size: 16px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .fail {
+      color: red;
+      font-size: 16px;
+      margin-top: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -87,141 +114,119 @@
     <h2>Air Flow Pvt. Ltd. Onboarding</h2>
   </div>
 
-  <div class="login-container" id="aadhaarPage">
+  <div class="login-container">
     <div class="right">
       <h3>Aadhaar & Mobile Number Verification</h3>
-      <!-- Aadhaar Number Section -->
-      <input type="text" id="aadhaarNumber" placeholder="Enter Your Aadhaar Number" required />
+
+      <!-- Aadhaar & Mobile -->
+      <input type="text" id="aadhaarNumber" placeholder="Enter Your Aadhaar Number" />
       <div class="error" id="aadhaarError">Please enter a valid Aadhaar number.</div>
 
-      <!-- Mobile Number Section -->
-      <input type="tel" id="mobileNumber" placeholder="Enter Your Mobile Number" required />
+      <input type="tel" id="mobileNumber" placeholder="Enter Your Mobile Number" />
       <div class="error" id="mobileError">Please enter a valid mobile number connected with Aadhaar.</div>
 
-      <button id="sendOTPBtn" onclick="sendOTP()">Send OTP</button>
-      
-      <!-- OTP Verification Section -->
-      <div id="otpSection" style="display: none; margin-top: 15px;">
-        <input type="text" id="otp" placeholder="Enter OTP" maxlength="6" />
-        <div class="error" id="otpError">Invalid OTP. Please try again.</div>
-        <button id="verifyBtn" onclick="verifyOTP()">Verify OTP</button>
+      <button onclick="showInstructionSection()">Next</button>
+
+      <!-- Instructions Section -->
+      <div id="instructionSection">
+        <h4>Step 1: Aadhaar Verification Instructions</h4>
+        <img id="instructionImage" src="https://i.imgur.com/Gd6uhz5.jpeg" alt="Instructions Image" />
+        <button id="verifyHereBtn" onclick="openUIDAI()">Verify Here</button>
+      </div>
+
+      <!-- Upload Section -->
+      <div id="uploadSection">
+        <h4>Step 2: Upload Screenshot (JPG only)</h4>
+        <input type="file" id="aadhaarFile" accept=".jpg,.jpeg" />
+        <button onclick="verifyAadhaarImage()">Verify Aadhaar</button>
+        <div id="verifyResult" class=""></div>
+      </div>
+
+      <!-- Next Buttons -->
+      <div id="nextButtons">
+        <button onclick="window.location.href='03candidate.html'">Next</button>
       </div>
     </div>
   </div>
 
-<script>
-let generatedOTP = "";
+  <script>
+    function isValidAadhaar(aadhaar) {
+      return /^\d{12}$/.test(aadhaar);
+    }
 
-// Aadhaar and mobile number validation functions
-function isValidAadhaar(aadhaar) {
-  const re = /^\d{12}$/;
-  return re.test(aadhaar);
-}
+    function isValidMobile(mobile) {
+      return /^[6-9]\d{9}$/.test(mobile);
+    }
 
-function isValidMobile(mobile) {
-  const re = /^[6-9]\d{9}$/;  // Only mobile numbers starting with 6, 7, 8, or 9 are valid
-  return re.test(mobile);
-}
+    function showInstructionSection() {
+      const aadhaar = document.getElementById("aadhaarNumber").value.trim();
+      const mobile = document.getElementById("mobileNumber").value.trim();
+      const aadhaarError = document.getElementById("aadhaarError");
+      const mobileError = document.getElementById("mobileError");
 
-function sendOTP() {
-  const aadhaar = document.getElementById("aadhaarNumber").value.trim();
-  const mobile = document.getElementById("mobileNumber").value.trim();
-  
-  const aadhaarError = document.getElementById("aadhaarError");
-  const mobileError = document.getElementById("mobileError");
-  
-  // Hide previous error messages
-  aadhaarError.style.display = "none";
-  mobileError.style.display = "none";
+      aadhaarError.style.display = "none";
+      mobileError.style.display = "none";
 
-  // Check if Aadhaar and Mobile Number are filled in
-  if (!aadhaar) {
-    aadhaarError.style.display = "block";  // Show error for Aadhaar
-    return;  // Stop the function if Aadhaar is empty
-  }
-  
-  if (!isValidAadhaar(aadhaar)) {
-    aadhaarError.textContent = "Please enter a valid 12-digit Aadhaar number.";
-    aadhaarError.style.display = "block";  // Show error for invalid Aadhaar
-    return;
-  }
-
-  if (!mobile) {
-    mobileError.style.display = "block";  // Show error for Mobile
-    return;
-  }
-
-  if (!isValidMobile(mobile)) {
-    mobileError.textContent = "Please enter a valid mobile number connected with Aadhaar.";
-    mobileError.style.display = "block";  // Show error for invalid mobile
-    return;
-  }
-
-  // Generate OTP
-  generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-  console.log("Generated OTP: ", generatedOTP);  // Log the generated OTP
-
-  // Send OTP request to Google Apps Script (send OTP to the mobile number)
-  const scriptURL = "https://script.google.com/macros/s/AKfycbxa7pmSZE962hcbPr9ocnW5-SsL48CFBlatIPg0HGiqGCxugZgZInLherg5NnDmrdM/exec";
-  fetch(scriptURL + `?action=sendOTP&mobile=${encodeURIComponent(mobile)}&otp=${generatedOTP}`)
-    .then(response => response.text())
-    .then(data => {
-      console.log(data);
-      alert("OTP sent successfully to " + mobile);
-      document.getElementById("otpSection").style.display = "block";
-    })
-    .catch(err => {
-      console.error('Error!', err.message);
-      alert("Failed to send OTP. Please try again.");
-    });
-}
-
-function verifyOTP() {
-  const otpInput = document.getElementById("otp").value.trim();
-  const otpError = document.getElementById("otpError");
-
-  otpError.style.display = "none";
-
-  if (!otpInput) {
-    otpError.textContent = "Please enter an OTP.";
-    otpError.style.display = "block";
-    return;
-  }
-
-  const aadhaar = document.getElementById("aadhaarNumber").value.trim();
-
-  // Send OTP verification request to Google Apps Script
-  const scriptURL = "https://script.google.com/macros/s/AKfycbxa7pmSZE962hcbPr9ocnW5-SsL48CFBlatIPg0HGiqGCxugZgZInLherg5NnDmrdM/exec";
-  fetch(scriptURL + `?action=verifyOTP&email=${encodeURIComponent(aadhaar)}&otp=${encodeURIComponent(otpInput)}`)
-    .then(response => response.json())
-    .then(data => {
-      if (data.success && data.verified) {
-        let existingMsg = document.getElementById("otpSuccessMsg");
-        if (!existingMsg) {
-          const successMsg = document.createElement("div");
-          successMsg.id = "otpSuccessMsg";
-          successMsg.style.color = "green";
-          successMsg.style.textAlign = "center";
-          successMsg.style.marginTop = "10px";
-          successMsg.textContent = "Your Aadhaar verification is successful ✅";
-          document.getElementById("otpSection").appendChild(successMsg);
-        }
-
-        const verifyButton = document.getElementById("verifyBtn");
-        verifyButton.textContent = "Next";
-        verifyButton.onclick = function() {
-          window.location.href = "03candidate.html"; // Redirect to next page (update as needed)
-        };
-      } else {
-        otpError.style.display = "block";
+      if (!aadhaar || !isValidAadhaar(aadhaar)) {
+        aadhaarError.style.display = "block";
+        return;
       }
-    })
-    .catch(err => {
-      console.error('Error during OTP verification!', err.message);
-      otpError.textContent = "Failed to verify OTP. Please try again.";
-      otpError.style.display = "block";
-    });
-}
-</script>
+
+      if (!mobile || !isValidMobile(mobile)) {
+        mobileError.style.display = "block";
+        return;
+      }
+
+      // Save Aadhaar to session for later verification
+      sessionStorage.setItem("aadhaarNumber", aadhaar);
+
+      // Show the instruction section
+      document.getElementById("instructionSection").style.display = "block";
+    }
+
+    function openUIDAI() {
+      window.open("https://tathya.uidai.gov.in/access/login?role=resident", "_blank");
+      document.getElementById("verifyHereBtn").disabled = true;
+
+      // Show upload section now
+      document.getElementById("uploadSection").style.display = "block";
+    }
+
+    function verifyAadhaarImage() {
+      const fileInput = document.getElementById("aadhaarFile");
+      const resultDiv = document.getElementById("verifyResult");
+      resultDiv.className = "";
+      resultDiv.innerText = "";
+
+      const file = fileInput.files[0];
+      if (!file) {
+        resultDiv.className = "fail";
+        resultDiv.innerText = "Please upload a JPG file.";
+        return;
+      }
+
+      const aadhaarFromUser = sessionStorage.getItem("aadhaarNumber");
+
+      // Extract 12 digit number from file name (assume only Aadhaar number is there)
+      const filename = file.name.toLowerCase();
+      const match = filename.match(/(\d{12})/);
+
+      if (match) {
+        const aadhaarInFile = match[1];
+
+        if (aadhaarInFile === aadhaarFromUser) {
+          resultDiv.className = "success";
+          resultDiv.innerText = "Your Aadhaar verification is successful ✅";
+          document.getElementById("nextButtons").style.display = "block";
+        } else {
+          resultDiv.className = "fail";
+          resultDiv.innerText = "Verification failed. Aadhaar number does not match.";
+        }
+      } else {
+        resultDiv.className = "fail";
+        resultDiv.innerText = "Filename must contain the 12-digit Aadhaar number.";
+      }
+    }
+  </script>
 </body>
 </html>
