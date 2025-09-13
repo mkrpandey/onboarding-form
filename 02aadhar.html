@@ -113,10 +113,23 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      padding: 20px;
     }
     #imageModal img {
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 80%;
+      max-height: 80%;
+      margin: 0 auto;
+      display: block;
+    }
+    #instructionImage {
+      width: 50%;
+      margin: 0 auto;
+      display: block;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    #instructionImage:hover {
+      transform: scale(1.05);
     }
   </style>
 </head>
