@@ -122,24 +122,27 @@
       display: block;
     }
     #instructionImageWrapper {
-      background-color: black;
-      padding: 10px;
-      display: inline-block;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-      width: 100%;
-      max-width: 200px; /* Limit size */
-      margin: 0 auto;
-    }
-    #instructionImageWrapper:hover {
-      transform: scale(1.05);
-    }
-    #instructionImage {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
+  background-color: black;
+  padding: 5px; /* Reduced padding for a more compact look */
+  display: block; /* Block-level to center */
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  max-width: 120px; /* Reduced the max-width of the image wrapper */
+  margin: 0 auto; /* Center the wrapper */
+}
+
+#instructionImageWrapper:hover {
+  transform: scale(1.05);
+}
+
+#instructionImage {
+  width: 100%; /* Image takes full width of the wrapper */
+  max-width: 100px; /* Further limit the image size */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Remove any inline-block space */
+}
+
   </style>
 </head>
 <body>
