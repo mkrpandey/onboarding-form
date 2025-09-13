@@ -128,7 +128,27 @@ function isValidEmail(email) {
 }
 
 function sendOTP() {
+  const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
+  
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
+  
+  // Hide previous error messages
+  nameError.style.display = "none";
+  emailError.style.display = "none";
+
+  // Check if name and email are filled in
+  if (!name) {
+    nameError.style.display = "block";  // Show error for name
+    return;  // Stop the function if name is empty
+  }
+  
+  if (!isValidEmail(email)) {
+    emailError.style.display = "block";  // Show error for email
+    return;  // Stop the function if email is invalid
+  }
+
   // Generate OTP
   generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
   console.log("Generated OTP: ", generatedOTP);  // Log the generated OTP
@@ -147,6 +167,47 @@ function sendOTP() {
       alert("Failed to send OTP. Please try again.");
     });
 }
+function sendOTP() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
+  
+  // Hide previous error messages
+  nameError.style.display = "none";
+  emailError.style.display = "none";
+
+  // Check if name and email are filled in
+  if (!name) {
+    nameError.style.display = "block";  // Show error for name
+    return;  // Stop the function if name is empty
+  }
+  
+  if (!isValidEmail(email)) {
+    emailError.style.display = "block";  // Show error for email
+    return;  // Stop the function if email is invalid
+  }
+
+  // Generate OTP
+  generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+  console.log("Generated OTP: ", generatedOTP);  // Log the generated OTP
+
+  // Send OTP request to Google Apps Script
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxa7pmSZE962hcbPr9ocnW5-SsL48CFBlatIPg0HGiqGCxugZgZInLherg5NnDmrdM/exec";
+  fetch(scriptURL + `?action=sendOTP&email=${encodeURIComponent(email)}&otp=${generatedOTP}`)
+    .then(response => response.text())
+    .then(data => {
+      console.log(data);
+      alert("OTP sent successfully to " + email);
+      document.getElementById("otpSection").style.display = "block";
+    })
+    .catch(err => {
+      console.error('Error!', err.message);
+      alert("Failed to send OTP. Please try again.");
+    });
+}
+
 
 
 
