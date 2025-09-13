@@ -19,52 +19,71 @@
       background-color: #f4f4f9;
     }
     .login-container {
-      width: 50%;
+      width: 90%;
+      max-width: 600px;
       background-color: #fff;
-      padding: 30px;
+      padding: 40px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
     }
     .header img {
       width: 50px;
     }
     .header h2 {
-      display: inline;
       margin-left: 10px;
       font-size: 24px;
     }
     .right h3 {
       font-size: 20px;
       margin-bottom: 20px;
+      font-weight: 600;
     }
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 15px;
       border: 1px solid #ddd;
-      border-radius: 4px;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
     }
     .error {
       color: red;
       display: none;
-      font-size: 12px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: left;
     }
     button {
       background-color: #007BFF;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 25px;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
     button:disabled {
       background-color: #ccc;
+      cursor: not-allowed;
     }
     #instructionSection, #uploadSection, #nextButtons {
       display: none;
     }
     #verifyResult {
       margin-top: 10px;
+      font-size: 18px;
     }
     .success {
       color: green;
@@ -82,10 +101,12 @@
       background-color: rgba(0, 0, 0, 0.7);
       justify-content: center;
       align-items: center;
+      transition: opacity 0.3s ease;
     }
     #imageModal img {
       max-width: 80%;
       max-height: 80%;
+      border-radius: 8px;
     }
 
     /* Progress Bar Styles */
@@ -100,6 +121,7 @@
       background-color: #4caf50;
       width: 0%;
       border-radius: 4px;
+      transition: width 0.3s ease;
     }
     #retryBtn {
       background-color: #f44336;
@@ -217,14 +239,14 @@
       }
 
       // Check if the file name follows the required pattern (firstname_aadhar.ext)
-     const filename = file.name; // Keep the original case of the filename
-    const namePattern = /^[a-zA-Z]+_(aadhar|adhar)\.(jpg|jpeg|png)$/;
-    // Check the pattern
-    if (!namePattern.test(filename)) {
+      const filename = file.name; // Keep the original case of the filename
+      const namePattern = /^[a-zA-Z]+_(aadhar|adhar)\.(jpg|jpeg|png)$/;
+      // Check the pattern
+      if (!namePattern.test(filename)) {
         resultDiv.className = "fail";
         resultDiv.innerText = "File name should follow the pattern firstname_aadhar.jpg (case-insensitive for the first name part).";
         return;
-    }
+      }
 
       // Show progress bar during OCR processing
       progressBar.style.width = "0%";
@@ -244,40 +266,48 @@
       ).then(({ data: { text } }) => {
         // Extract Aadhaar number from OCR text
         const aadhaarFromUser = sessionStorage.getItem("aadhaarNumber");  // Retrieve saved Aadhaar number
-        const extractedAadhaar = text.replace(/\D/g, '').substring(0, 12);  // Extract first 12 digits (Aadhaar number)
+        const extractedAadhaar = text.replace(/\D/g, '').substring(0, 12); // Extract only first 12 digits
 
+        // Check if extracted Aadhaar matches user input
+        const resultDiv = document.getElementById("verifyResult");
         if (aadhaarFromUser === extractedAadhaar) {
           resultDiv.className = "success";
-          resultDiv.innerText = "Your Aadhaar verification is successful ✅";
+          resultDiv.innerText = "Aadhaar verification successful!";
           document.getElementById("nextButtons").style.display = "block";
         } else {
           resultDiv.className = "fail";
-          resultDiv.innerText = "Verification failed. Aadhaar number in image does not match the entered number.";
+          resultDiv.innerText = "Aadhaar number does not match the extracted value. Please try again.";
           retryBtn.style.display = "inline-block";
         }
+
+        // Hide progress bar after OCR completion
+        progressBar.style.width = "100%";
       }).catch((error) => {
         resultDiv.className = "fail";
-        resultDiv.innerText = "Error processing image for OCR: " + error.message;
+        resultDiv.innerText = "Error during OCR processing. Please try again.";
         retryBtn.style.display = "inline-block";
+        console.error(error);
       });
     }
 
-    // Retry option
+    // Retry file upload
     function retryUpload() {
-      document.getElementById("aadhaarFile").value = "";  // Reset file input
-      document.getElementById("verifyResult").innerText = "";  // Clear result
-      document.getElementById("progress-bar").style.width = "0%";  // Reset progress bar
-      document.getElementById("retryBtn").style.display = "none";  // Hide retry button
+      const fileInput = document.getElementById("aadhaarFile");
+      fileInput.value = "";  // Reset file input
+      document.getElementById("verifyResult").innerText = "";
+      document.getElementById("verifyResult").className = "";
+      document.getElementById("progress-bar").style.width = "0%";
+      document.getElementById("retryBtn").style.display = "none";
     }
 
-    // ✅ Modal functionality
+    // Open modal for instruction image view
     function openModal() {
       document.getElementById("imageModal").style.display = "flex";
     }
 
+    // Close modal
     function closeModal(event) {
-      const image = document.querySelector("#imageModal img");
-      if (event.target !== image) {
+      if (event.target === document.getElementById("imageModal")) {
         document.getElementById("imageModal").style.display = "none";
       }
     }
