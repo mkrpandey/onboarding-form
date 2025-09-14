@@ -290,32 +290,43 @@ function openUIDAI() {
   document.getElementById("uploadSection").style.display = "block";
 }
 
-// Verify Aadhaar image with OCR
 function verifyAadhaarImage() {
   const fileInput = document.getElementById("aadhaarFile");
   const resultDiv = document.getElementById("verifyResult");
   const progressBar = document.getElementById("progress-bar");
   const retryBtn = document.getElementById("retryBtn");
 
+  const enteredAadhaar = sessionStorage.getItem("aadhaarNumber");
+  const file = fileInput.files[0];
+
   resultDiv.className = "";
   resultDiv.innerText = "";
+  retryBtn.style.display = "none";
+  progressBar.style.width = "0%";
 
-  const file = fileInput.files[0];
   if (!file) {
     resultDiv.className = "fail";
-    resultDiv.innerText = "Please upload an image.";
+    resultDiv.innerText = "⚠️ Please upload an image file with Aadhaar number and correct file name.";
     return;
   }
 
-  const enteredAadhaar = sessionStorage.getItem("aadhaarNumber");
+  const allowedExtensions = ['jpg', 'jpeg', 'png'];
+  const fileExtension = file.name.split('.').pop().toLowerCase();
+
+  if (!allowedExtensions.includes(fileExtension)) {
+    resultDiv.className = "fail";
+    resultDiv.innerText = "❌ Invalid file type. Only JPG, JPEG, or PNG allowed.";
+    return;
+  }
+
+  const fileNameWithoutExt = file.name.split('.')[0].toLowerCase();
+  const isFileNameValid = /.+_(aadhaar|adhar)$/.test(fileNameWithoutExt);
+
   if (!enteredAadhaar || !/^\d{12}$/.test(enteredAadhaar)) {
     resultDiv.className = "fail";
-    resultDiv.innerText = "Please enter your Aadhaar number before uploading image.";
+    resultDiv.innerText = "❌ Invalid or missing Aadhaar number entered earlier.";
     return;
   }
-
-  progressBar.style.width = "0%";
-  retryBtn.style.display = "none";
 
   Tesseract.recognize(file, 'eng', {
     logger: (m) => {
@@ -330,7 +341,7 @@ function verifyAadhaarImage() {
     const match = text.match(/\d{4}\s\d{4}\s\d{4}/);
     if (!match) {
       resultDiv.className = "fail";
-      resultDiv.innerText = "Aadhaar number not found in image. Please upload a clear image.";
+      resultDiv.innerText = "❌ Aadhaar number not found in image. Please upload a clearer image.";
       retryBtn.style.display = "inline-block";
       return;
     }
@@ -338,20 +349,28 @@ function verifyAadhaarImage() {
     const extractedAadhaar = match[0].replace(/\s/g, '');
     console.log("🔢 Extracted Aadhaar:", extractedAadhaar);
 
-    if (extractedAadhaar === enteredAadhaar) {
-      resultDiv.className = "success";
-      resultDiv.innerText = "✅ Your Aadhaar verification is successfully completed.";
-      document.getElementById("uploadSection").style.display = "none";
-      document.getElementById("nextButtons").style.display = "block";
-    } else {
+    if (extractedAadhaar !== enteredAadhaar) {
       resultDiv.className = "fail";
-      resultDiv.innerText = "Aadhaar number mismatch. Please try again.";
+      resultDiv.innerText = "❌ Aadhaar number mismatch. Please re-upload the correct file.";
       retryBtn.style.display = "inline-block";
+      return;
     }
+
+    if (!isFileNameValid) {
+      resultDiv.className = "fail";
+      resultDiv.innerText = `✅ Aadhaar number matches, but file name is incorrect.\nPlease rename file to: firstname_aadhaar or firstname_adhar.`;
+      retryBtn.style.display = "inline-block";
+      return;
+    }
+
+    resultDiv.className = "success";
+    resultDiv.innerText = "✅ Your Aadhaar verification is successfully completed. File uploaded.";
+    document.getElementById("uploadSection").style.display = "none";
+    document.getElementById("nextButtons").style.display = "block";
 
   }).catch((error) => {
     resultDiv.className = "fail";
-    resultDiv.innerText = "An error occurred during OCR. Please try again.";
+    resultDiv.innerText = "❌ Error during OCR processing. Try again.";
     retryBtn.style.display = "inline-block";
     console.error("OCR Error:", error);
   });
