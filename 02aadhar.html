@@ -268,32 +268,41 @@ function verifyAadhaarImage() {
   progressBar.style.width = "0%";
   retryBtn.style.display = "none";
 
-  Tesseract.recognize(file, 'eng', {
-    logger: (m) => {
-      if (m.status === 'recognizing text') {
-        const progress = Math.round(m.progress * 100);
-        progressBar.style.width = `${progress}%`;
-      }
+Tesseract.recognize(file, 'eng', {
+  logger: (m) => {
+    if (m.status === 'recognizing text') {
+      const progress = Math.round(m.progress * 100);
+      progressBar.style.width = `${progress}%`;
     }
-  }).then(({ data: { text } }) => {
-    // Check if Aadhaar number is found in the image
-    const extractedAadhaar = text.replace(/\D/g, ''); // Clean any non-digit characters
+  }
+}).then(({ data: { text } }) => {
+  // 🔍 Debug logs to help inspect OCR results
+  console.log("🔤 Raw OCR Text:", text);
 
-    if (extractedAadhaar === sessionStorage.getItem("aadhaarNumber")) {
-      resultDiv.className = "success";
-      resultDiv.innerText = "Aadhaar image verified successfully!";
-      document.getElementById("uploadSection").style.display = "none";
-      document.getElementById("nextButtons").style.display = "block";
-    } else {
-      resultDiv.className = "fail";
-      resultDiv.innerText = "Aadhaar number mismatch. Please try again.";
-      retryBtn.style.display = "inline-block";
-    }
-  }).catch((error) => {
+  const extractedAadhaar = text.replace(/\D/g, ''); // Only digits
+  console.log("🔢 Extracted Digits:", extractedAadhaar);
+
+  const enteredAadhaar = sessionStorage.getItem("aadhaarNumber");
+  console.log("📥 User Entered Aadhaar:", enteredAadhaar);
+
+  // Check if Aadhaar number matches (more flexible: .includes instead of ===)
+  if (extractedAadhaar.includes(enteredAadhaar)) {
+    resultDiv.className = "success";
+    resultDiv.innerText = "Aadhaar image verified successfully!";
+    document.getElementById("uploadSection").style.display = "none";
+    document.getElementById("nextButtons").style.display = "block";
+  } else {
     resultDiv.className = "fail";
-    resultDiv.innerText = "An error occurred during verification. Please try again.";
+    resultDiv.innerText = "Aadhaar number mismatch. Please try again.";
     retryBtn.style.display = "inline-block";
-  });
+  }
+}).catch((error) => {
+  resultDiv.className = "fail";
+  resultDiv.innerText = "An error occurred during verification. Please try again.";
+  retryBtn.style.display = "inline-block";
+  console.error("OCR Error:", error); // <-- Always log OCR errors too
+});
+
 }
 
 // Retry uploading
