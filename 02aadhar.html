@@ -320,7 +320,7 @@ function verifyAadhaarImage() {
   }
 
   const fileNameWithoutExt = file.name.split('.')[0].toLowerCase();
-  const isFileNameValid = /.+_(aadhaar|adhar)$/.test(fileNameWithoutExt);
+  const isFileNameValid = /.+_(aadhaar|adhaar)$/.test(fileNameWithoutExt);
 
   if (!enteredAadhaar || !/^\d{12}$/.test(enteredAadhaar)) {
     resultDiv.className = "fail";
@@ -358,7 +358,7 @@ function verifyAadhaarImage() {
 
     if (!isFileNameValid) {
       resultDiv.className = "fail";
-      resultDiv.innerText = `✅ Aadhaar number matches, but file name is incorrect.\nPlease rename file to: firstname_aadhaar or firstname_adhar.`;
+      resultDiv.innerText = `✅ Aadhaar number matches, but file name is incorrect.\nPlease rename file to: firstname_aadhaar or firstname_adhaar.`;
       retryBtn.style.display = "inline-block";
       return;
     }
