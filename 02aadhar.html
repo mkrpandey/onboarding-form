@@ -161,7 +161,7 @@
       <input type="tel" id="mobileNumber" placeholder="Enter Your Mobile Number Connected with Aadhaar" />
       <div class="error" id="mobileError">Please enter a valid mobile number connected with Aadhaar.</div>
 
-      <button onclick="showInstructionSection()">Next</button>
+     <button id="initialNextBtn" onclick="showInstructionSection()">Next</button>
 
            <!-- Instructions Section -->
       <div id="instructionSection" style="display: none;">
@@ -253,12 +253,12 @@ function isValidMobile(mobile) {
   return /^[6-9]\d{9}$/.test(mobile);
 }
 
-// Show instruction section
 function showInstructionSection() {
   const aadhaar = document.getElementById("aadhaarNumber").value.trim();
   const mobile = document.getElementById("mobileNumber").value.trim();
   const aadhaarError = document.getElementById("aadhaarError");
   const mobileError = document.getElementById("mobileError");
+  const nextBtn = document.getElementById("initialNextBtn"); // Get the button
 
   aadhaarError.style.display = "none";
   mobileError.style.display = "none";
@@ -278,6 +278,9 @@ function showInstructionSection() {
 
   // Show the instruction section
   document.getElementById("instructionSection").style.display = "block";
+
+  // ✅ Disable the button so user can't click it again
+  nextBtn.disabled = true;
 }
 
 // Open UIDAI link
