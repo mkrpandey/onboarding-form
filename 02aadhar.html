@@ -163,14 +163,25 @@
 
       <button onclick="showInstructionSection()">Next</button>
 
-      <!-- Instructions Section -->
+           <!-- Instructions Section -->
       <div id="instructionSection" style="display: none;">
         <h4>Step 1: Aadhaar Verification Instructions</h4>
+        
         <div id="instructionImageWrapper" onclick="openModal()">
           <img id="instructionImage" src="instruction01.jpg" alt="Instructions Image" />
         </div>
-        <button id="verifyHereBtn" onclick="openUIDAI()">Verify Here</button>
+      
+        <!-- ✅ Checkbox Section goes HERE -->
+        <div style="margin-top: 10px; text-align: center;">
+          <input type="checkbox" id="readManualCheckbox" onclick="toggleVerifyButton()" />
+          <label for="readManualCheckbox">I have read the Aadhaar verification manual</label>
+          <div id="checkboxError" class="error">Please read the manual and check the box before proceeding.</div>
+        </div>
+      
+        <!-- ✅ Disabled Verify Button -->
+        <button id="verifyHereBtn" onclick="openUIDAI()" disabled>Verify Here</button>
       </div>
+
 
       <!-- Upload Section -->
       <div id="uploadSection" style="display: none;">
@@ -196,6 +207,41 @@
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.0.0-beta.2/dist/tesseract.min.js"></script>
+
+<script>
+  // (existing functions like isValidAadhaar, showInstructionSection, etc.)
+
+  // ✅ Add this below existing functions
+  function toggleVerifyButton() {
+    const checkbox = document.getElementById("readManualCheckbox");
+    const verifyButton = document.getElementById("verifyHereBtn");
+    const errorMsg = document.getElementById("checkboxError");
+
+    if (checkbox.checked) {
+      verifyButton.disabled = false;
+      errorMsg.style.display = "none";
+    } else {
+      verifyButton.disabled = true;
+    }
+  }
+
+  function openUIDAI() {
+    const checkbox = document.getElementById("readManualCheckbox");
+    const errorMsg = document.getElementById("checkboxError");
+
+    if (!checkbox.checked) {
+      errorMsg.style.display = "block";
+      return;
+    }
+
+    // Proceed if checked
+    window.open("https://myaadhaar.uidai.gov.in/", "_blank");
+    document.getElementById("verifyHereBtn").disabled = true;
+    document.getElementById("uploadSection").style.display = "block";
+  }
+
+  // (rest of your existing JS functions like verifyAadhaarImage, retryUpload, etc.)
+</script>
 
 <script>
 // Validate Aadhaar and Mobile numbers
