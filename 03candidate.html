@@ -139,13 +139,14 @@
       border-radius: 30px;
       cursor: pointer;
     }
-  /* ✅ Address Grid Styling */
-  .address-grid-wrapper {
+/* ✅ Address Grid Styling */
+.address-grid-wrapper {
   display: flex;
   gap: 40px;
   align-items: stretch; /* ensures both blocks match in height */
 }
 
+/* ✅ Address block container (left + right) */
 .address-block {
   flex: 1;
   background-color: #f9f9f9;
@@ -155,8 +156,10 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  text-align: left; /* Make sure content inside is left-aligned */
 }
 
+/* ✅ Block headings */
 .address-block h4 {
   margin-bottom: 10px;
   font-size: 16px;
@@ -165,26 +168,49 @@
   padding-bottom: 5px;
 }
 
+/* ✅ Grid layout inside each block */
 .address-block .grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
 }
 
-/* ✅ Checkbox alignment just above the current block title */
+/* ✅ Checkbox alignment above title */
 .current-address-block {
   text-align: left;
 }
 
+/* ✅ Checkbox and label inline & left-aligned */
 .checkbox-container {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: flex-start; /* Force left alignment */
   gap: 8px;
   cursor: pointer;
-  white-space: nowrap; /* prevents text wrapping */
+  white-space: nowrap; /* prevents wrapping of label text */
   margin-bottom: 10px;
-  padding-left: 0px; /* optional: indent from left */
+  padding-left: 0;
 }
+
+/* ✅ Checkbox sizing */
+.checkbox-container input[type="checkbox"] {
+  margin: 0;
+  transform: scale(1.1);
+}
+
+/* ✅ Mobile view – Stack address blocks */
+@media (max-width: 768px) {
+  .address-grid-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .checkbox-container {
+    position: static;
+    margin-bottom: 10px;
+  }
+}
+
 
 
 .checkbox-container input[type="checkbox"] {
