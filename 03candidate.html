@@ -176,11 +176,12 @@
   position: relative;
 }
 
-.checkbox-container label {
+.checkbox-container {
   display: flex;
   align-items: center;
-  gap: 8px; /* space between checkbox and text */
-  cursor: pointer; /* makes it clear clickable */
+  gap: 8px;              /* Space between checkbox and text */
+  cursor: pointer;
+  justify-content: flex-start; /* Align to the left side */
 }
 
 .checkbox-container input[type="checkbox"] {
