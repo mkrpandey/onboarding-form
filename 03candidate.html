@@ -177,17 +177,15 @@
 }
 
 .checkbox-container {
-  display: flex;
-  align-items: left; /* vertically center align */
-  gap: 8px; /* checkbox aur text ke beech gap */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
-  justify-content: flex-start; /* left align */
+  white-space: nowrap; /* prevents text wrapping */
+  margin-bottom: 10px;
+  padding-left: 5px; /* optional: indent from left */
 }
 
-.checkbox-container input[type="checkbox"] {
-  margin: 0;
-  transform: scale(1.1); /* thoda bada karna hai toh */
-}
 
 .checkbox-container input[type="checkbox"] {
   margin: 0; /* remove default spacing */
