@@ -12,7 +12,7 @@
       margin: 0;
       padding: 0;
     }
-    body {na
+    body {
       font-family: 'Poppins', sans-serif;
       background: #f0f8ff;
       color: #333;
@@ -201,7 +201,10 @@
     margin-bottom: 10px;
   }
 }
-
+.checkbox-container label {
+  display: inline;
+  margin: 0;
+}
 
   </style>
 </head>
@@ -315,10 +318,8 @@
     <!-- Current Address -->
     <div class="address-block current-address-block">
       <div class="checkbox-container">
-        <label class="checkbox-container">
-        <input type="checkbox" />
-        <span>Same as Permanent Address</span>
-      </label>
+      <input type="checkbox" id="sameAddressCheckbox">
+      <label for="sameAddressCheckbox">Same as Permanent Address</label>
       </div>
       <h4>Current Address</h4>
 
