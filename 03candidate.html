@@ -140,28 +140,23 @@
       cursor: pointer;
     }
   /* ✅ Address Grid Styling */
-    .address-grid {
+      .address-grid {
       display: flex;
       gap: 40px;
+      align-items: stretch; /* ensures equal height */
     }
-  
+    
     .address-block {
+      flex: 1; /* Equal width for both blocks */
       background-color: #f9f9f9;
       padding: 20px;
       border-radius: 8px;
       border: 1px solid #ccc;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
     
-    /* Make the permanent address slightly wider */
-    .address-grid > .address-block:first-child {
-      flex: 1.1;
-    }
-    
-    /* Make the current address slightly narrower */
-    .address-grid > .address-block:last-child {
-      flex: 0.9;
-    }
- 
     .address-block h4 {
       margin-bottom: 10px;
       font-size: 16px;
@@ -169,18 +164,39 @@
       border-bottom: 1px solid #ccc;
       padding-bottom: 5px;
     }
-  
+    
     .address-block .grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 12px;
     }
-  
+    
+    /* ✅ Checkbox above Current Address */
+    .checkbox-container {
+      text-align: right;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .checkbox-container input[type="checkbox"] {
+      transform: scale(1.1);
+      margin-right: 6px;
+    }
+    
+    /* ✅ Mobile view - Stack vertically */
     @media (max-width: 768px) {
       .address-grid {
         flex-direction: column;
       }
+    
+      .checkbox-container {
+        text-align: left;
+        margin-top: -5px;
+        margin-bottom: 10px;
+      }
     }
+
   </style>
 </head>
 <body>
@@ -271,47 +287,49 @@
       </div>
     </div>
 
-<!-- Address Section -->
-<div class="section">
-  <div class="section-title">Address Information</div>
-
-  <!-- Two Column Grid: Permanent (left), Current (right) -->
-  <div class="address-grid">
-    
-    <!-- Permanent Address (Left Column) -->
-    <div class="address-block">
-      <h4>Permanent Address</h4>
-      <div class="grid">
-        <div><label>Address - Line 1</label><input type="text" name="perm1"></div>
-        <div><label>Line 2</label><input type="text" name="perm2"></div>
-        <div><label>Line 3</label><input type="text" name="perm3"></div>
-        <div><label>State</label><input type="text" name="permState"></div>
-        <div><label>Pin Code</label><input type="text" name="permPin"></div>
-        <div><label>Country</label><input type="text" name="permCountry"></div>
+  <!-- ✅ Address Section -->
+  <div class="section">
+    <div class="section-title">Address Information</div>
+  
+    <div class="address-grid-wrapper">
+      <!-- Permanent Address -->
+      <div class="address-block">
+        <h4>Permanent Address</h4>
+        <div class="grid">
+          <div><label>Address - Line 1</label><input type="text" name="perm1"></div>
+          <div><label>Line 2</label><input type="text" name="perm2"></div>
+          <div><label>Line 3</label><input type="text" name="perm3"></div>
+          <div><label>Line 4</label><input type="text" name="perm4"></div>
+          <div><label>State</label><input type="text" name="permState"></div>
+          <div><label>Pin Code</label><input type="text" name="permPin"></div>
+          <div><label>Country</label><input type="text" name="permCountry"></div>
+        </div>
+      </div>
+  
+      <!-- Current Address -->
+      <div class="address-block current-address-block">
+        <!-- ✅ Checkbox above only current -->
+        <div class="checkbox-container">
+          <label>
+            <input type="checkbox" id="sameAddressCheckbox">
+            Same as Permanent Address
+          </label>
+        </div>
+  
+        <h4>Current Address</h4>
+        <div class="grid">
+          <div><label>Address - Line 1</label><input type="text" name="curr1"></div>
+          <div><label>Line 2</label><input type="text" name="curr2"></div>
+          <div><label>Line 3</label><input type="text" name="curr3"></div>
+          <div><label>Line 4</label><input type="text" name="curr4"></div>
+          <div><label>State</label><input type="text" name="currState"></div>
+          <div><label>Pin Code</label><input type="text" name="currPin"></div>
+          <div><label>Country</label><input type="text" name="currCountry"></div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Current Address (Right Column) -->
-    <div class="address-block">
-    <h4>
-      Current Address
-      <label style="font-size: 13px; font-weight: normal; float: right;">
-        <input type="checkbox" id="sameAddressCheckbox" style="transform: scale(1.1); margin-right: 5px;">
-        Same as Permanent Address
-        </label>
-    </h4>
-      
-      <div class="grid">
-        <div><label>Address - Line 1</label><input type="text" name="curr1"></div>
-        <div><label>Line 2</label><input type="text" name="curr2"></div>
-        <div><label>Line 3</label><input type="text" name="curr3"></div>
-        <div><label>State</label><input type="text" name="currState"></div>
-        <div><label>Pin Code</label><input type="text" name="currPin"></div>
-        <div><label>Country</label><input type="text" name="currCountry"></div>
-      </div>
-    </div>
-
-  </div> <!-- End of address-grid -->
 
 
     
@@ -365,41 +383,41 @@
   </form>
 
  <!-- ✅ Add the Script HERE -->
-  <script>
-    document.getElementById('sameAddressCheckbox').addEventListener('change', function () {
-      const isChecked = this.checked;
+<script>
+  document.getElementById('sameAddressCheckbox').addEventListener('change', function () {
+    const isChecked = this.checked;
 
-      const permFields = {
-        perm1: document.querySelector('input[name="perm1"]').value,
-        perm2: document.querySelector('input[name="perm2"]').value,
-        perm3: document.querySelector('input[name="perm3"]').value,
-        perm4: document.querySelector('input[name="perm4"]').value,
-        permState: document.querySelector('input[name="permState"]').value,
-        permPin: document.querySelector('input[name="permPin"]').value,
-        permCountry: document.querySelector('input[name="permCountry"]').value,
-      };
+    const permFields = {
+      perm1: document.querySelector('input[name="perm1"]').value,
+      perm2: document.querySelector('input[name="perm2"]').value,
+      perm3: document.querySelector('input[name="perm3"]').value,
+      perm4: document.querySelector('input[name="perm4"]').value,
+      permState: document.querySelector('input[name="permState"]').value,
+      permPin: document.querySelector('input[name="permPin"]').value,
+      permCountry: document.querySelector('input[name="permCountry"]').value,
+    };
 
-      const currInputs = {
-        curr1: document.querySelector('input[name="curr1"]'),
-        curr2: document.querySelector('input[name="curr2"]'),
-        curr3: document.querySelector('input[name="curr3"]'),
-        curr4: document.querySelector('input[name="curr4"]'),
-        currState: document.querySelector('input[name="currState"]'),
-        currPin: document.querySelector('input[name="currPin"]'),
-        currCountry: document.querySelector('input[name="currCountry"]'),
-      };
+    const currInputs = {
+      curr1: document.querySelector('input[name="curr1"]'),
+      curr2: document.querySelector('input[name="curr2"]'),
+      curr3: document.querySelector('input[name="curr3"]'),
+      curr4: document.querySelector('input[name="curr4"]'),
+      currState: document.querySelector('input[name="currState"]'),
+      currPin: document.querySelector('input[name="currPin"]'),
+      currCountry: document.querySelector('input[name="currCountry"]'),
+    };
 
-      for (const key in currInputs) {
-        if (isChecked) {
-          currInputs[key].value = permFields[key.replace('curr', 'perm')];
-          currInputs[key].readOnly = true;
-        } else {
-          currInputs[key].value = '';
-          currInputs[key].readOnly = false;
-        }
+    for (const key in currInputs) {
+      if (isChecked) {
+        currInputs[key].value = permFields[key.replace('curr', 'perm')];
+        currInputs[key].readOnly = true;
+      } else {
+        currInputs[key].value = '';
+        currInputs[key].readOnly = false;
       }
-    });
-  </script>
+    }
+  });
+</script>
 
 </body>
 </html>
