@@ -146,13 +146,22 @@
     }
   
     .address-block {
-      flex: 1;
       background-color: #f9f9f9;
       padding: 20px;
       border-radius: 8px;
       border: 1px solid #ccc;
     }
-  
+    
+    /* Make the permanent address slightly wider */
+    .address-grid > .address-block:first-child {
+      flex: 1.1;
+    }
+    
+    /* Make the current address slightly narrower */
+    .address-grid > .address-block:last-child {
+      flex: 0.9;
+    }
+ 
     .address-block h4 {
       margin-bottom: 10px;
       font-size: 16px;
@@ -285,7 +294,14 @@
 
     <!-- Current Address (Right Column) -->
     <div class="address-block">
-      <h4>Current Address</h4>
+    <h4>
+      Current Address
+      <label style="font-size: 13px; font-weight: normal; float: right;">
+        <input type="checkbox" id="sameAddressCheckbox" style="transform: scale(1.1); margin-right: 5px;">
+        Same as Permanent Address
+        </label>
+    </h4>
+      
       <div class="grid">
         <div><label>Address - Line 1</label><input type="text" name="curr1"></div>
         <div><label>Line 2</label><input type="text" name="curr2"></div>
@@ -349,6 +365,43 @@
       <button type="submit">Next</button>
     </div>
   </form>
+
+ <!-- ✅ Add the Script HERE -->
+  <script>
+    document.getElementById('sameAddressCheckbox').addEventListener('change', function () {
+      const isChecked = this.checked;
+
+      const permFields = {
+        perm1: document.querySelector('input[name="perm1"]').value,
+        perm2: document.querySelector('input[name="perm2"]').value,
+        perm3: document.querySelector('input[name="perm3"]').value,
+        perm4: document.querySelector('input[name="perm4"]').value,
+        permState: document.querySelector('input[name="permState"]').value,
+        permPin: document.querySelector('input[name="permPin"]').value,
+        permCountry: document.querySelector('input[name="permCountry"]').value,
+      };
+
+      const currInputs = {
+        curr1: document.querySelector('input[name="curr1"]'),
+        curr2: document.querySelector('input[name="curr2"]'),
+        curr3: document.querySelector('input[name="curr3"]'),
+        curr4: document.querySelector('input[name="curr4"]'),
+        currState: document.querySelector('input[name="currState"]'),
+        currPin: document.querySelector('input[name="currPin"]'),
+        currCountry: document.querySelector('input[name="currCountry"]'),
+      };
+
+      for (const key in currInputs) {
+        if (isChecked) {
+          currInputs[key].value = permFields[key.replace('curr', 'perm')];
+          currInputs[key].readOnly = true;
+        } else {
+          currInputs[key].value = '';
+          currInputs[key].readOnly = false;
+        }
+      }
+    });
+  </script>
 
 </body>
 </html>
