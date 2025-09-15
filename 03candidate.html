@@ -147,16 +147,16 @@
       <div class="section">
         <div class="section-title">Personal Information</div>
       
-        <!-- "Name as per Aadhar" - smaller and not bold -->
+              <!-- "Name as per Aadhar" -->
         <div style="font-size: 13px; font-weight: normal; margin-bottom: 6px;">
           Name as per Aadhar
         </div>
-      
-        <!-- Salutation + Name fields in one row -->
-        <div style="display: flex; gap: 16px;">
-          <div>
+        
+        <!-- Salutation + Name fields in one full-width row -->
+        <div style="display: flex; gap: 16px; width: 100%;">
+          <div style="flex: 1;">
             <label>Salutation</label><br>
-            <select name="salutation" required>
+            <select name="salutation" required style="width: 100%;">
               <option value="">Select</option>
               <option value="Mr">Mr</option>
               <option value="Ms">Ms</option>
@@ -164,20 +164,19 @@
               <option value="Dr">Dr</option>
             </select>
           </div>
-          <div>
+          <div style="flex: 1;">
             <label>First Name</label><br>
-            <input type="text" name="firstName" required>
+            <input type="text" name="firstName" required style="width: 100%;">
           </div>
-          <div>
+          <div style="flex: 1;">
             <label>Middle Name</label><br>
-            <input type="text" name="middleName">
+            <input type="text" name="middleName" style="width: 100%;">
           </div>
-          <div>
+          <div style="flex: 1;">
             <label>Last Name</label><br>
-            <input type="text" name="lastName">
+            <input type="text" name="lastName" style="width: 100%;">
           </div>
         </div>
-      </div>
       
       <div class="grid-3">
         <div>
