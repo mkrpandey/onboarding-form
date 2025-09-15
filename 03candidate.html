@@ -178,10 +178,15 @@
 
 .checkbox-container {
   display: flex;
-  align-items: center;
-  gap: 8px;              /* Space between checkbox and text */
+  align-items: center; /* vertically center align */
+  gap: 8px; /* checkbox aur text ke beech gap */
   cursor: pointer;
-  justify-content: flex-start; /* Align to the left side */
+  justify-content: flex-start; /* left align */
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin: 0;
+  transform: scale(1.1); /* thoda bada karna hai toh */
 }
 
 .checkbox-container input[type="checkbox"] {
@@ -200,10 +205,6 @@
     position: static;
     margin-bottom: 10px;
   }
-}
-.checkbox-container label {
-  display: inline;
-  margin: 0;
 }
 
   </style>
