@@ -146,78 +146,77 @@
       <!-- Personal Details -->
       <div class="section">
         <div class="section-title">Personal Information</div>
-      
-              <!-- "Name as per Aadhar" -->
-        <div style="font-size: 13px; font-weight: normal; margin-bottom: 6px;">
-          Name as per Aadhar
-        </div>
-        
-       <!-- Salutation + Name fields in one full-width row with tight vertical spacing -->
-        <div style="display: flex; gap: 16px; width: 100%;">
-          <div style="flex: 1;">
-            <label style="margin-bottom: 2px; display: block; font-size: 14px;">Salutation*</label>
-            <select name="salutation" required style="width: 100%; padding: 8px;">
-              <option value="">Select</option>
-              <option value="Mr">Mr</option>
-              <option value="Ms">Ms</option>
-              <option value="Mrs">Mrs</option>
-              <option value="Dr">Dr</option>
-            </select>
-          </div>
-          <div style="flex: 1;">
-            <label style="margin-bottom: 2px; display: block; font-size: 14px;">First Name*</label>
-            <input type="text" name="firstName" required style="width: 100%; padding: 8px;">
-          </div>
-          <div style="flex: 1;">
-            <label style="margin-bottom: 2px; display: block; font-size: 14px;">Middle Name</label>
-            <input type="text" name="middleName" style="width: 100%; padding: 8px;">
-          </div>
-          <div style="flex: 1;">
-            <label style="margin-bottom: 2px; display: block; font-size: 14px;">Last Name</label>
-            <input type="text" name="lastName" style="width: 100%; padding: 8px;">
-          </div>
-        </div>
-      
-      <div style="margin-top: 16px;"></div>
-      <div class="grid-3">
-        <div>
-          <label>Father's Name*</label>
-          <input type="text" name="fatherName" required>
-        </div>
-        <div>
-          <label>Gender*</label>
-          <select name="gender" required>
-            <option value="">Select</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div>
-          <label>DOB (DD/MM/YYYY)*</label>
-          <input type="date" name="dob" required>
-        </div>
-      </div>
-      
-      <div class="grid-4">
-        <div>
-          <label>Contact Number*</label>
-          <input type="text" name="contactNumber" required>
-        </div>
-        <div>
-          <label>Email ID*</label>
-          <input type="email" name="email" required>
-        </div>
-        <div>
-          <label>PAN Card Number*</label>
-          <input type="text" name="pan" required>
-        </div>
-        <div>
-          <label>Aadhaar Card Number*</label>
-          <input type="text" name="aadhaar" required>
-        </div>
-      </div>
+          
+      <div style="font-size: 13px; font-weight: normal; margin-bottom: 6px;">
+    Name as per Aadhar<span style="color: red;">*</span>
+  </div>
 
+    <!-- Salutation + Name fields -->
+    <div style="display: flex; gap: 16px; width: 100%;">
+      <div style="flex: 1;">
+        <label style="margin-bottom: 2px; display: block; font-size: 14px;">Salutation<span style="color: red;">*</span></label>
+        <select name="salutation" required style="width: 100%; padding: 10px;">
+          <option value="">Select</option>
+          <option value="Mr">Mr</option>
+          <option value="Ms">Ms</option>
+          <option value="Mrs">Mrs</option>
+          <option value="Dr">Dr</option>
+        </select>
+      </div>
+      <div style="flex: 1;">
+        <label style="margin-bottom: 2px; display: block; font-size: 14px;">First Name<span style="color: red;">*</span></label>
+        <input type="text" name="firstName" required style="width: 100%; padding: 10px;">
+      </div>
+      <div style="flex: 1;">
+        <label style="margin-bottom: 2px; display: block; font-size: 14px;">Middle Name</label>
+        <input type="text" name="middleName" style="width: 100%; padding: 10px;">
+      </div>
+      <div style="flex: 1;">
+        <label style="margin-bottom: 2px; display: block; font-size: 14px;">Last Name</label>
+        <input type="text" name="lastName" style="width: 100%; padding: 10px;">
+      </div>
+    </div>
+    
+    <div style="margin-top: 16px;"></div>
+    
+    <div class="grid-3">
+      <div>
+        <label>Father's Name<span style="color: red;">*</span></label>
+        <input type="text" name="fatherName" required>
+      </div>
+      <div>
+        <label>Gender<span style="color: red;">*</span></label>
+        <select name="gender" required>
+          <option value="">Select</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label>DOB (DD/MM/YYYY)<span style="color: red;">*</span></label>
+        <input type="date" name="dob" required>
+      </div>
+    </div>
+    
+    <div class="grid-4">
+      <div>
+        <label>Contact Number<span style="color: red;">*</span></label>
+        <input type="text" name="contactNumber" required>
+      </div>
+      <div>
+        <label>Email ID<span style="color: red;">*</span></label>
+        <input type="email" name="email" required>
+      </div>
+      <div>
+        <label>PAN Card Number<span style="color: red;">*</span></label>
+        <input type="text" name="pan" required>
+      </div>
+      <div>
+        <label>Aadhaar Card Number<span style="color: red;">*</span></label>
+        <input type="text" name="aadhaar" required>
+      </div>
+    </div>
 
     <!-- Address -->
     <div class="section">
