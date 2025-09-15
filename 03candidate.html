@@ -142,48 +142,51 @@
     <!-- ✅ Candidate Application Form -->
     <form id="candidateForm">
       <h2>CANDIDATE APPLICATION FORM</h2>
-
-        <!-- Personal Details -->
-        <div class="section">
-      <div class="section-title">Personal Information</div>
-    
-      <div class="grid-4">
-        <div>
-    <!-- Label above Salutation -->
-          <div style="margin-bottom: 4px; font-weight: bold;">
-              Name as per Aadhar
+      
+                <!-- Personal Details -->
+      <div class="section">
+        <div class="section-title">Personal Information</div>
+      
+        <!-- "Name as per Aadhar" - smaller and not bold -->
+        <div style="font-size: 13px; font-weight: normal; margin-bottom: 6px;">
+          Name as per Aadhar
+        </div>
+      
+        <!-- Salutation + Name fields in one row -->
+        <div style="display: flex; gap: 16px;">
+          <div>
+            <label>Salutation</label><br>
+            <select name="salutation" required>
+              <option value="">Select</option>
+              <option value="Mr">Mr</option>
+              <option value="Ms">Ms</option>
+              <option value="Mrs">Mrs</option>
+              <option value="Dr">Dr</option>
+            </select>
           </div>
-          <label>Salutation</label>
-          <select name="salutation">
-            <option value="">Select</option>
-            <option value="Mr">Mr</option>
-            <option value="Ms">Ms</option>
-            <option value="Mrs">Mrs</option>
-            <option value="Dr">Dr</option>
-          </select>
-        </div>
-        <div>
-          <label>First Name</label>
-          <input type="text" name="firstName">
-        </div>
-        <div>
-          <label>Middle Name</label>
-          <input type="text" name="middleName">
-        </div>
-        <div>
-          <label>Last Name</label>
-          <input type="text" name="lastName">
+          <div>
+            <label>First Name</label><br>
+            <input type="text" name="firstName" required>
+          </div>
+          <div>
+            <label>Middle Name</label><br>
+            <input type="text" name="middleName">
+          </div>
+          <div>
+            <label>Last Name</label><br>
+            <input type="text" name="lastName">
+          </div>
         </div>
       </div>
-    
+      
       <div class="grid-3">
         <div>
           <label>Father's Name</label>
-          <input type="text" name="fatherName">
+          <input type="text" name="fatherName" required>
         </div>
         <div>
           <label>Gender</label>
-          <select name="gender">
+          <select name="gender" required>
             <option value="">Select</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -192,29 +195,28 @@
         </div>
         <div>
           <label>DOB (DD/MM/YYYY)</label>
-          <input type="date" name="dob">
+          <input type="date" name="dob" required>
         </div>
       </div>
-    
+      
       <div class="grid-4">
         <div>
           <label>Contact Number</label>
-          <input type="text" name="contactNumber">
+          <input type="text" name="contactNumber" required>
         </div>
         <div>
           <label>Email ID</label>
-          <input type="email" name="email">
+          <input type="email" name="email" required>
         </div>
         <div>
           <label>PAN Card Number</label>
-          <input type="text" name="pan">
+          <input type="text" name="pan" required>
         </div>
         <div>
           <label>Aadhaar Card Number</label>
-          <input type="text" name="aadhaar">
+          <input type="text" name="aadhaar" required>
         </div>
       </div>
-    </div>
 
 
     <!-- Address -->
