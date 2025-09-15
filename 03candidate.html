@@ -176,17 +176,16 @@
   position: relative;
 }
 
-.checkbox-container {
-  position: relative;
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 8px;
-  text-align: left;  /* ⬅️ This ensures left alignment */
+.checkbox-container label {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* space between checkbox and text */
+  cursor: pointer; /* makes it clear clickable */
 }
 
 .checkbox-container input[type="checkbox"] {
+  margin: 0; /* remove default spacing */
   transform: scale(1.1);
-  margin-right: 6px;
 }
 
 /* ✅ Mobile view - Stack vertically */
@@ -316,11 +315,12 @@
     <div class="address-block current-address-block">
       <div class="checkbox-container">
         <label>
-          <input type="checkbox" id="sameAddressCheckbox">
+          <input type="checkbox" id="sameAddressCheckbox" />
           Same as Permanent Address
         </label>
       </div>
       <h4>Current Address</h4>
+
       <div class="grid">
         <div><label>Address - Line 1</label><input type="text" name="curr1"></div>
         <div><label>Line 2</label><input type="text" name="curr2"></div>
