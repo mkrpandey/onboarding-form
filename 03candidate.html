@@ -73,14 +73,14 @@
       gap: 15px;
       margin-bottom: 20px;
     }
-    
+
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 15px;
       margin-bottom: 20px;
     }
-    
+
     /* Mobile: stack fields vertically */
     @media (max-width: 768px) {
       .grid-4,
@@ -241,20 +241,20 @@
       <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" alt="Logo" />
       <h2>Air Flow Pvt. Ltd. Onboarding</h2>
     </div>
-  
+
     <!-- ✅ Candidate Application Form -->
     <form id="candidateForm">
       <h2>CANDIDATE APPLICATION FORM</h2>
-      
+
       <!-- Personal Details -->
       <div class="section">
         <div class="section-title">Personal Information</div>
-          
+
      <!-- Name as per Aadhar -->
     <div style="font-size: 13px; font-weight: normal; margin-bottom: 6px;">
       Name as per Aadhar <span style="color: red;">*</span>
     </div>
-    
+
     <div class="grid-4">
       <div>
         <label>Salutation <span style="color: red;">*</span></label>
@@ -280,7 +280,7 @@
       </div>
     </div>
 
-    
+
     <!-- Second Line -->
     <div class="grid-3">
       <div>
@@ -301,7 +301,7 @@
         <input type="date" name="dob" required>
       </div>
     </div>
-    
+
     <!-- Third Line -->
     <div class="grid-4">
       <div>
@@ -328,42 +328,18 @@
 
   <div class="address-grid-wrapper">
     <!-- Permanent Address -->
-   <div class="address-block">
-  <h4>Permanent Address</h4>
-  <div class="grid">
-    <div>
-      <label>Address - Line 1</label><br>
-      <input type="text" name="perm1">
+    <div class="address-block">
+      <h4>Permanent Address</h4>
+      <div class="grid">
+        <div><label>Address - Line 1</label><input type="text" name="perm1"></div>
+        <div><label>Line 2</label><input type="text" name="perm2"></div>
+        <div><label>Line 3</label><input type="text" name="perm3"></div>
+        <div><label>Line 4</label><input type="text" name="perm4"></div>
+        <div><label>State</label><input type="text" name="permState"></div>
+        <div><label>Pin Code</label><input type="text" name="permPin"></div>
+        <div><label>Country</label><input type="text" name="permCountry"></div>
+      </div>
     </div>
-    <div>
-      <label>Line 2</label><br>
-      <input type="text" name="perm2">
-    </div>
-    <div>
-      <label>Line 3</label><br>
-      <input type="text" name="perm3">
-    </div>
-    <div>
-      <label>Line 4</label><br>
-      <input type="text" name="perm4">
-    </div>
-    <div>
-      <label>State</label><br>
-      <input type="text" name="permState">
-    </div>
-    <div>
-      <label>Pin Code</label><br>
-      <input type="text" name="permPin">
-    </div>
-    <div>
-      <label>Country</label><br>
-      <input type="text" name="permCountry">
-    </div>
-  </div>
-</div>
-
-
-
 
     <!-- Current Address -->
     <div class="address-block current-address-block">
@@ -371,42 +347,20 @@
       <input type="checkbox" id="sameAddressCheckbox">
       <label for="sameAddressCheckbox">Same as Permanent Address</label>
       </div>
+      <h4>Current Address</h4>
 
-  <div class="address-block">
- <h4>Permanent Address</h4>
-  <div class="grid">
-    <div>
-      <label>Address - Line 1</label><br>
-      <input type="text" name="perm1">
-    </div>
-    <div>
-      <label>Line 2</label><br>
-      <input type="text" name="perm2">
-    </div>
-    <div>
-      <label>Line 3</label><br>
-      <input type="text" name="perm3">
-    </div>
-    <div>
-      <label>Line 4</label><br>
-      <input type="text" name="perm4">
-    </div>
-    <div>
-      <label>State</label><br>
-      <input type="text" name="permState">
-    </div>
-    <div>
-      <label>Pin Code</label><br>
-      <input type="text" name="permPin">
-    </div>
-    <div>
-      <label>Country</label><br>
-      <input type="text" name="permCountry">
+      <div class="grid">
+        <div><label>Address - Line 1</label><input type="text" name="curr1"></div>
+        <div><label>Line 2</label><input type="text" name="curr2"></div>
+        <div><label>Line 3</label><input type="text" name="curr3"></div>
+        <div><label>Line 4</label><input type="text" name="curr4"></div>
+        <div><label>State</label><input type="text" name="currState"></div>
+        <div><label>Pin Code</label><input type="text" name="currPin"></div>
+        <div><label>Country</label><input type="text" name="currCountry"></div>
+      </div>
     </div>
   </div>
 </div>
-
-
 
     <!-- Employment Details -->
     <div class="section">
