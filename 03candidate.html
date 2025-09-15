@@ -67,7 +67,7 @@
       color: #003366;
     }
 
-    grid-4 {
+      .grid-4 {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 15px;
@@ -80,27 +80,15 @@
       gap: 15px;
       margin-bottom: 20px;
     }
-  
-    /* Your new name-row styles */
-    .name-row {
-      display: flex;
-      gap: 16px;
-      flex-wrap: nowrap; /* stay in one row on desktop */
-    }
-  
-    .name-row .field {
-      flex: 1; /* equal width */
-      display: flex;
-      flex-direction: column;
-    }
-  
+    
     /* Mobile: stack fields vertically */
     @media (max-width: 768px) {
-      .name-row {
-        flex-direction: column;
-        gap: 12px;
+      .grid-4,
+      .grid-3 {
+        grid-template-columns: 1fr;
       }
     }
+
   label {
     font-size: 14px;
     font-weight: 500;
