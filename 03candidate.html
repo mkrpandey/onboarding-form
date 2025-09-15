@@ -190,15 +190,15 @@
       <div class="section">
         <div class="section-title">Personal Information</div>
           
-      <div style="font-size: 13px; font-weight: normal; margin-bottom: 6px;">
-    Name as per Aadhar<span style="color: red;">*</span>
-  </div>
-
-    <!-- Salutation + Name fields -->
-    <div style="display: flex; gap: 16px; width: 100%;">
-      <div style="flex: 1;">
-        <label style="margin-bottom: 2px; display: block; font-size: 14px;">Salutation<span style="color: red;">*</span></label>
-        <select name="salutation" required style="width: 100%; padding: 10px;">
+     <!-- Name as per Aadhar -->
+    <div style="font-size: 13px; font-weight: normal; margin-bottom: 6px;">
+      Name as per Aadhar <span style="color: red;">*</span>
+    </div>
+    
+    <div class="grid-4">
+      <div>
+        <label>Salutation <span style="color: red;">*</span></label>
+        <select name="salutation" required>
           <option value="">Select</option>
           <option value="Mr">Mr</option>
           <option value="Ms">Ms</option>
@@ -206,21 +206,20 @@
           <option value="Dr">Dr</option>
         </select>
       </div>
-      <div style="flex: 1;">
-        <label style="margin-bottom: 2px; display: block; font-size: 14px;">First Name<span style="color: red;">*</span></label>
-        <input type="text" name="firstName" required style="width: 100%; padding: 10px;">
+      <div>
+        <label>First Name <span style="color: red;">*</span></label>
+        <input type="text" name="firstName" required>
       </div>
-      <div style="flex: 1;">
-        <label style="margin-bottom: 2px; display: block; font-size: 14px;">Middle Name</label>
-        <input type="text" name="middleName" style="width: 100%; padding: 10px;">
+      <div>
+        <label>Middle Name</label>
+        <input type="text" name="middleName">
       </div>
-      <div style="flex: 1;">
-        <label style="margin-bottom: 2px; display: block; font-size: 14px;">Last Name</label>
-        <input type="text" name="lastName" style="width: 100%; padding: 10px;">
+      <div>
+        <label>Last Name</label>
+        <input type="text" name="lastName">
       </div>
     </div>
-    
-    <div style="margin-top: 16px;"></div>
+
     
     <!-- Second Line -->
     <div class="grid-3">
