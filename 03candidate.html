@@ -66,11 +66,20 @@
       padding-bottom: 5px;
       color: #003366;
     }
-    .grid {
+        .grid-4 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 15px;
+      margin-bottom: 20px;
     }
+    
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
     label {
       font-size: 14px;
       font-weight: 500;
@@ -84,6 +93,7 @@
       border-radius: 6px;
       font-size: 14px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -135,21 +145,73 @@
 
     <!-- Personal Details -->
     <div class="section">
-      <div class="section-title">Personal Information</div>
-      <div class="grid">
-        <div><label>Name as per Aadhaar</label>
-        <div><label>Salutation</label><input type="text" name="salutation"></div>
-        <div><label>First Name</label><input type="text" name="firstName"></div>
-        <div><label>Middle Name</label><input type="text" name="middleName"></div>
-        <div><label>Last Name</label><input type="text" name="lastName"></div>
-        <div><label>Father's Name</label><input type="text" name="fatherName"></div>
-        <div><label>Gender</label><input type="text" name="gender"></div>
-        <div><label>DOB (DD/MM/YYYY)</label><input type="text" name="dob"></div>
-        <div><label>Contact Number</label><input type="text" name="contactNumber"></div>
-        <div><label>PAN</label><input type="text" name="pan"></div>
-        <div><label>Email ID</label><input type="email" name="email"></div>
-      </div>
+  <div class="section-title">Personal Information</div>
+
+  <div class="grid-4">
+    <div>
+      <label>Salutation</label>
+      <select name="salutation">
+        <option value="">Select</option>
+        <option value="Mr">Mr</option>
+        <option value="Ms">Ms</option>
+        <option value="Mrs">Mrs</option>
+        <option value="Dr">Dr</option>
+      </select>
     </div>
+    <div>
+      <label>First Name</label>
+      <input type="text" name="firstName">
+    </div>
+    <div>
+      <label>Middle Name</label>
+      <input type="text" name="middleName">
+    </div>
+    <div>
+      <label>Last Name</label>
+      <input type="text" name="lastName">
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div>
+      <label>Father's Name</label>
+      <input type="text" name="fatherName">
+    </div>
+    <div>
+      <label>Gender</label>
+      <select name="gender">
+        <option value="">Select</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div>
+      <label>DOB (DD/MM/YYYY)</label>
+      <input type="date" name="dob">
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div>
+      <label>Contact Number</label>
+      <input type="text" name="contactNumber">
+    </div>
+    <div>
+      <label>Email ID</label>
+      <input type="email" name="email">
+    </div>
+    <div>
+      <label>PAN Card Number</label>
+      <input type="text" name="pan">
+    </div>
+    <div>
+      <label>Aadhaar Card Number</label>
+      <input type="text" name="aadhaar">
+    </div>
+  </div>
+</div>
+
 
     <!-- Address -->
     <div class="section">
