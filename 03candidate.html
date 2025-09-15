@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Air Flow Pvt. Ltd. Onboarding</title>  
+  <title>Candidate Application Form</title>  
   <link rel="icon" type="image/png" href="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     body {
       font-family: 'Poppins', sans-serif;
       background: #f0f8ff;
       color: #333;
-      padding-top: 140px;
-      padding-left: 20px;
-      padding-right: 20px;
+      padding-top: 160px; /* spacing below fixed header */
     }
     .header {
       position: fixed;
@@ -38,18 +40,20 @@
       font-weight: 600;
       font-size: 36px;
     }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #003366;
-    }
     form {
       max-width: 1100px;
       margin: auto;
       background: #fff;
-      padding: 30px;
+      padding: 60px 30px 30px;
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(0,0,0,0.08);
+    }
+    h2 {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      padding-top: 10px;
+      color: #003366;
     }
     .section {
       margin-bottom: 30px;
@@ -119,11 +123,13 @@
 </head>
 <body>
 
+  <!-- ✅ Fixed Header -->
   <div class="header">
     <img src="https://airflow.in/wp-content/uploads/2021/12/cropped-AIR-1.png" alt="Logo" />
     <h2>Air Flow Pvt. Ltd. Onboarding</h2>
   </div>
 
+  <!-- ✅ Candidate Application Form -->
   <form id="candidateForm">
     <h2>CANDIDATE APPLICATION FORM</h2>
 
@@ -205,28 +211,16 @@
 
     <!-- Undertaking -->
     <div class="section">
-      <div class="section-title">Undertaking</div>
       <div class="undertaking">
-        <strong>Terms and Conditions:</strong> I certify that the information furnished above is factually correct and subject to verification by the company (including Reference Check & Background Verification). I accept that an appointment given to me on this basis can be revoked and/or terminated without any notice at any time in future if any information has been false, misleading or deliberately omitted/suppressed. I also certify that I am at present in sound mental and physical condition to undertake employment with the company.
+        I hereby declare that all the above information is true to the best of my knowledge. I shall be liable for disciplinary/legal action if any information is found to be incorrect.
       </div>
     </div>
 
-    <!-- Next Button -->
+    <!-- Button -->
     <div class="next-btn">
       <button type="submit">Next</button>
     </div>
   </form>
-
-  <script>
-    document.getElementById("candidateForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const dataObj = {};
-      formData.forEach((value, key) => dataObj[key] = value);
-      localStorage.setItem("candidateForm", JSON.stringify(dataObj));
-      window.location.href = "07preview.html"; // redirect to preview
-    });
-  </script>
 
 </body>
 </html>
