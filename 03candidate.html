@@ -182,14 +182,15 @@
 
 /* ✅ Checkbox and label inline & left-aligned */
 .checkbox-container {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Force left alignment */
   gap: 8px;
   cursor: pointer;
-  white-space: nowrap; /* prevents wrapping of label text */
-  margin-bottom: 10px;
-  padding-left: 0;
+  white-space: nowrap;
+  justify-content: flex-start;
 }
 
 /* ✅ Checkbox sizing */
