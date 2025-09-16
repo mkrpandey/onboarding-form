@@ -375,9 +375,12 @@
       <label for="sameAddressCheckbox">Same as Permanent Address</label>
       </div>
       <h4>Current Address</h4>
-
       <div class="grid">
-        <div><label>Address - Line 1</label><input type="text" name="curr1"></div>
+
+        <div><label>Address - Line 1<span style="color: red;">*</span></label>
+            <input type="text" name="curr1" required>
+          </div>
+        
         <div><label>Line 2</label><input type="text" name="curr2"></div>
         <div><label>Line 3</label><input type="text" name="curr3"></div>
         <div><label>Line 4</label><input type="text" name="curr4"></div>
